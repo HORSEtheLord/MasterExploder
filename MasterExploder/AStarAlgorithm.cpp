@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cmath>
+#include <limits>
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
@@ -22,19 +23,19 @@ std::vector<AStarNode> AStarAlgorithm::GetNeighbours(const AStarNode &node) cons
 	if (node.m_x > 0)
 	{
 		neighbours.push_back(AStarNode(node.m_x - 1, node.m_y));
-		if (node.m_y > 0)
+		/*if (node.m_y > 0)
 			neighbours.push_back(AStarNode(node.m_x - 1, node.m_y - 1));
 		if (node.m_y < m_height - 1)
-			neighbours.push_back(AStarNode(node.m_x - 1, node.m_y + 1));
+			neighbours.push_back(AStarNode(node.m_x - 1, node.m_y + 1));*/
 	}
 
 	if (node.m_x < m_width - 1)
 	{
 		neighbours.push_back(AStarNode(node.m_x + 1, node.m_y));
-		if (node.m_y > 0)
+		/*if (node.m_y > 0)
 			neighbours.push_back(AStarNode(node.m_x + 1, node.m_y - 1));
 		if (node.m_y < m_height - 1)
-			neighbours.push_back(AStarNode(node.m_x + 1, node.m_y + 1));
+			neighbours.push_back(AStarNode(node.m_x + 1, node.m_y + 1));*/
 	}
 
 	if (node.m_y > 0)
@@ -64,7 +65,16 @@ std::vector<AStarNode> AStarAlgorithm::FindPath(const AStarNode &start, const AS
 	std::unordered_map<AStarNode, int, decltype(hasher)> hscore(10, hasher);
 	std::unordered_set<AStarNode, decltype(hasher)> closedSet(10, hasher);
 
-	auto cmp = [&fscore](const AStarNode &first, const AStarNode &second) { return fscore.at(first) < fscore.at(second); };
+	auto cmp = [&fscore, &hasher](const AStarNode &first, const AStarNode &second)
+	{
+		if (fscore.find(first) == fscore.cend())
+			fscore.insert(std::unordered_map<AStarNode, int, decltype(hasher)>::value_type(first, std::numeric_limits<int>::max()));
+
+		if (fscore.find(second) == fscore.cend())
+			fscore.insert(std::unordered_map<AStarNode, int, decltype(hasher)>::value_type(second, std::numeric_limits<int>::max()));
+
+		return fscore.at(first) < fscore.at(second);
+	};
 
 	std::set<AStarNode, decltype(cmp)> openSet(cmp);
 	openSet.insert(start);
@@ -73,10 +83,10 @@ std::vector<AStarNode> AStarAlgorithm::FindPath(const AStarNode &start, const AS
 
 	while (!openSet.empty())
 	{
-		const AStarNode &node = *(openSet.begin());
+		AStarNode node = *(openSet.begin());
 		if (node == goal)
 		{
-			std::vector<AStarNode> path { node };
+			std::vector<AStarNode> path{ node };
 
 			auto it = cameFrom.find(node);
 			while (it != cameFrom.cend())
@@ -90,7 +100,7 @@ std::vector<AStarNode> AStarAlgorithm::FindPath(const AStarNode &start, const AS
 			return path;
 		}
 
-		openSet.erase(node);
+		openSet.erase(openSet.begin());
 		closedSet.insert(node);
 
 		for (const AStarNode &neighbour : GetNeighbours(node))
@@ -117,17 +127,16 @@ std::vector<AStarNode> AStarAlgorithm::FindPath(const AStarNode &start, const AS
 				//nie chcê go robiæ u siebie
 				auto it = cameFrom.find(neighbour);
 				if (it == cameFrom.cend())
-					cameFrom.insert(std::unordered_map<AStarNode, AStarNode, decltype(hasher)>::value_type (neighbour, node));
+					cameFrom.insert(std::unordered_map<AStarNode, AStarNode, decltype(hasher)>::value_type(neighbour, node));
 				else
 					it->second = node;
-				
+
 				gscore[neighbour] = ngscore;
 				fscore[neighbour] = ngscore + hscore[neighbour];
 			}
 		}
 	}
 
-	//HUJOWY KOMENTARZ
 	std::vector<AStarNode> path;
 	return path;
 }
