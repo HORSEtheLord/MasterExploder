@@ -127,6 +127,7 @@ std::vector<AStarNode> AStarAlgorithm::FindPath(const AStarNode &start, const AS
 		}
 	}
 
+	//HUJOWY KOMENTARZ
 	std::vector<AStarNode> path;
 	return path;
 }
