@@ -16,7 +16,15 @@ Terrain::~Terrain()
 
 bool Terrain::Init(Graphics *graphics)
 {
-	return ImageLoader::LoadSprite(graphics, L"tile1.png", &m_bmp);
+	wchar_t *filename = L"tile1.png";
+
+	if (!ImageLoader::LoadSprite(graphics, filename, &m_bmp))
+	{
+		Logger::Log(L"Sprite loading failed. File: " + std::wstring(filename));
+		return false;
+	}
+
+	return true;
 }
 
 
