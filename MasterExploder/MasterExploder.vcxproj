@@ -88,6 +88,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>windowscodecs.lib;d2d1.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -122,6 +123,7 @@
     <ClCompile Include="AStarAlgorithm.cpp" />
     <ClCompile Include="AStarNode.cpp" />
     <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Terrain.cpp" />
@@ -132,6 +134,7 @@
     <ClInclude Include="AStarAlgorithm.h" />
     <ClInclude Include="AStarNode.h" />
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Unit.h" />
