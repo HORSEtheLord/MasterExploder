@@ -1,6 +1,7 @@
 #include "Unit.h"
 #include "Logger.h"
 #include "Utils.h"
+#include "ImageLoader.h"
 
 Unit::Unit(int locationX, int locationY)
 	: m_locationX(locationX), m_locationY(locationY)
@@ -15,92 +16,7 @@ Unit::~Unit()
 
 bool Unit::Init(Graphics *graphics)
 {
-	HRESULT res;
-
-	IWICImagingFactory *wicFactory = nullptr;
-	IWICBitmapDecoder *wicDecoder = nullptr;
-	IWICBitmapFrameDecode *wicFrame = nullptr;
-	IWICFormatConverter *wicConverter = nullptr;
-
-	//MKOS: musi byæ po ShowWindow (main)
-	//nie wiem dlaczego
-	res = CoCreateInstance(
-		CLSID_WICImagingFactory,
-		NULL,
-		CLSCTX_INPROC_SERVER,
-		IID_IWICImagingFactory,
-		(LPVOID*)&wicFactory);
-
-	if (res != S_OK)
-	{
-		Logger::Log(L"IWICImagingFactory creation failed.");
-		safeReleaseResources(wicFactory, wicDecoder, wicFrame, wicConverter);
-		return false;
-	}
-
-	wchar_t *filename = L"unit1.png";
-
-	res = wicFactory->CreateDecoderFromFilename(
-		filename,
-		NULL,
-		GENERIC_READ,
-		WICDecodeMetadataCacheOnLoad,
-		&wicDecoder);
-
-	if (res != S_OK)
-	{
-		Logger::Log(L"IWICBitmapDecoder creation failed. File: " + std::wstring(filename));
-		safeReleaseResources(wicFactory, wicDecoder, wicFrame, wicConverter);
-		return false;
-	}
-
-	res = wicDecoder->GetFrame(0, &wicFrame);
-
-	if (res != S_OK)
-	{
-		Logger::Log(L"Failed to get IWICBitmapFrameDecode.");
-		safeReleaseResources(wicFactory, wicDecoder, wicFrame, wicConverter);
-		return false;
-	}
-
-	res = wicFactory->CreateFormatConverter(&wicConverter);
-
-	if (res != S_OK)
-	{
-		Logger::Log(L"IWICFormatConverter creation failed.");
-		safeReleaseResources(wicFactory, wicDecoder, wicFrame, wicConverter);
-		return false;
-	}
-
-	res = wicConverter->Initialize(
-		wicFrame,
-		GUID_WICPixelFormat32bppPBGRA,
-		WICBitmapDitherTypeNone,
-		NULL,
-		0.0,
-		WICBitmapPaletteTypeCustom);
-
-	if (res != S_OK)
-	{
-		Logger::Log(L"IWICFormatConverter initialization failed.");
-		safeReleaseResources(wicFactory, wicDecoder, wicFrame, wicConverter);
-		return false;
-	}
-
-	res = graphics->GetRenderTarget()->CreateBitmapFromWicBitmap(
-		wicConverter,
-		NULL,
-		&m_bmp);
-
-	if (res != S_OK)
-	{
-		Logger::Log(L"ID2D1Bitmap creation failed.");
-		safeReleaseResources(wicFactory, wicDecoder, wicFrame, wicConverter);
-		return false;
-	}
-
-	safeReleaseResources(wicFactory, wicDecoder, wicFrame, wicConverter);
-	return true;
+	return ImageLoader::LoadSprite(graphics, L"unit1.png", &m_bmp);
 }
 
 void Unit::Draw(Graphics *graphics) const

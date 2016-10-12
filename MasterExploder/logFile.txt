@@ -1,2 +1,0 @@
-12-10-2016 15:36:13 : Application started.
-12-10-2016 15:37:46 : Application ended.

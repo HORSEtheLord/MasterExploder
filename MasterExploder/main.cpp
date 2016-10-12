@@ -84,10 +84,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 	unit = new Unit(0, 0);
 
 	ShowWindow(windowHandle, nCmdShow);
-	
+
 	if (!terrain->Init(graphics))
 	{
-		Logger::Log(L"Terrain initialization failed.");
+		Logger::Log(L"Unit initialization failed.");
+		delete unit;
 		delete terrain;
 		delete graphics;
 		return -1;
