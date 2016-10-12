@@ -121,6 +121,27 @@ void Unit::Draw(Graphics *graphics) const
 
 void Unit::Move(int locationX, int locationY)
 {
-	m_locationX = locationX;
-	m_locationY = locationY;
+	/*m_locationX = locationX;
+	m_locationY = locationY;*/
+
+	AStarAlgorithm algorithm(40, 30);
+	m_path = algorithm.FindPath(AStarNode(m_locationX, m_locationY), AStarNode(locationX, locationY));
+}
+
+void Unit::Update()
+{
+	m_timeSinceLastMove += MS_PER_UPDATE;
+
+	//MKOS: 1000 -> movement speed
+	if (m_timeSinceLastMove >= 500)
+	{
+		m_timeSinceLastMove -= 500;
+		if (!m_path.empty())
+		{
+			AStarNode &node = *m_path.begin();
+			m_locationX = node.GetX();
+			m_locationY = node.GetY();
+			m_path.erase(m_path.begin());
+		}
+	}
 }

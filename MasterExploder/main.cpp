@@ -1,3 +1,4 @@
+#include <ctime>
 #include <Windows.h>
 #include <Windowsx.h>
 
@@ -102,6 +103,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		return -1;
 	}
 
+
+	LARGE_INTEGER t;
+
+	QueryPerformanceFrequency(&t);
+	long long frequency = t.QuadPart;
+
+	QueryPerformanceCounter(&t);
+	long long previousTime = t.QuadPart;
+	double lag = 0.0;
+
 	MSG message;
 	message.message = WM_NULL;
 	while (message.message != WM_QUIT)
@@ -118,6 +129,18 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		}
 		else
 		{
+			QueryPerformanceCounter(&t);
+			long long currentTime = t.QuadPart;
+			double elapsedTime = currentTime - previousTime;
+			previousTime = currentTime;
+			lag += 1000 * elapsedTime / frequency;
+
+			while (lag >= MS_PER_UPDATE)
+			{
+				unit->Update();
+				lag -= MS_PER_UPDATE;
+			}
+
 			graphics->BeginDraw();
 			terrain->Draw(graphics);
 			unit->Draw(graphics);
