@@ -88,7 +88,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 
 	if (!terrain->Init(graphics))
 	{
-		Logger::Log(L"Unit initialization failed.");
+		Logger::Log(L"Terrain initialization failed.");
 		delete unit;
 		delete terrain;
 		delete graphics;
@@ -103,7 +103,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		delete graphics;
 		return -1;
 	}
-
 
 	LARGE_INTEGER t;
 

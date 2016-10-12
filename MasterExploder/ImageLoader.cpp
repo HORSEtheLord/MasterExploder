@@ -37,8 +37,6 @@ bool ImageLoader::LoadSprite(Graphics *graphics, wchar_t *filename, ID2D1Bitmap 
 		return false;
 	}
 
-	//wchar_t *filename = L"unit1.png";
-
 	res = wicFactory->CreateDecoderFromFilename(
 		filename,
 		NULL,
