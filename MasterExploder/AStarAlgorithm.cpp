@@ -8,8 +8,8 @@
 
 #include "AStarAlgorithm.h"
 
-AStarAlgorithm::AStarAlgorithm(int width, int height)
-	: m_width(width), m_height(height)
+AStarAlgorithm::AStarAlgorithm(int width, int height, bool *map)
+	: m_width(width), m_height(height), m_map(map)
 {
 }
 
@@ -17,12 +17,26 @@ AStarAlgorithm::~AStarAlgorithm()
 {
 }
 
+AStarAlgorithm* AStarAlgorithm::m_instance = nullptr;
+
+bool AStarAlgorithm::Init(int width, int height, bool *map)
+{
+	m_instance = new AStarAlgorithm(width, height, map);
+	return true;
+}
+
+bool AStarAlgorithm::IsNodeBlocked(int x, int y) const
+{
+	return m_map[x * m_height + y];
+}
+
 std::vector<AStarNode> AStarAlgorithm::GetNeighbours(const AStarNode &node) const
 {
 	std::vector<AStarNode> neighbours;
 	if (node.m_x > 0)
 	{
-		neighbours.push_back(AStarNode(node.m_x - 1, node.m_y));
+		if (!IsNodeBlocked(node.m_x - 1, node.m_y))
+			neighbours.push_back(AStarNode(node.m_x - 1, node.m_y));
 		/*if (node.m_y > 0)
 			neighbours.push_back(AStarNode(node.m_x - 1, node.m_y - 1));
 		if (node.m_y < m_height - 1)
@@ -31,7 +45,8 @@ std::vector<AStarNode> AStarAlgorithm::GetNeighbours(const AStarNode &node) cons
 
 	if (node.m_x < m_width - 1)
 	{
-		neighbours.push_back(AStarNode(node.m_x + 1, node.m_y));
+		if (!IsNodeBlocked(node.m_x + 1, node.m_y))
+			neighbours.push_back(AStarNode(node.m_x + 1, node.m_y));
 		/*if (node.m_y > 0)
 			neighbours.push_back(AStarNode(node.m_x + 1, node.m_y - 1));
 		if (node.m_y < m_height - 1)
@@ -39,9 +54,11 @@ std::vector<AStarNode> AStarAlgorithm::GetNeighbours(const AStarNode &node) cons
 	}
 
 	if (node.m_y > 0)
-		neighbours.push_back(AStarNode(node.m_x, node.m_y - 1));
+		if (!IsNodeBlocked(node.m_x, node.m_y - 1))
+			neighbours.push_back(AStarNode(node.m_x, node.m_y - 1));
 	if (node.m_y < m_height - 1)
-		neighbours.push_back(AStarNode(node.m_x, node.m_y + 1));
+		if (!IsNodeBlocked(node.m_x, node.m_y + 1))
+			neighbours.push_back(AStarNode(node.m_x, node.m_y + 1));
 
 	return neighbours;
 }

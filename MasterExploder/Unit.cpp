@@ -40,7 +40,7 @@ void Unit::Draw(Graphics *graphics) const
 		D2D1::RectF(locationX, locationY, locationX + width, locationY + height),
 		1.0f,
 		D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
-		D2D1::RectF(0.0f, 0.0f, m_bmp->GetSize().width, height = m_bmp->GetSize().height));
+		D2D1::RectF(0.0f, 0.0f, m_bmp->GetSize().width, m_bmp->GetSize().height));
 }
 
 void Unit::Move(int locationX, int locationY)
@@ -48,18 +48,18 @@ void Unit::Move(int locationX, int locationY)
 	/*m_locationX = locationX;
 	m_locationY = locationY;*/
 
-	AStarAlgorithm algorithm(40, 30);
-	m_path = algorithm.FindPath(AStarNode(m_locationX, m_locationY), AStarNode(locationX, locationY));
+	m_path = AStarAlgorithm::GetInstance()->FindPath(AStarNode(m_locationX, m_locationY), AStarNode(locationX, locationY));
 }
 
 void Unit::Update()
 {
 	m_timeSinceLastMove += MS_PER_UPDATE;
 
-	//MKOS: 1000 -> movement speed
-	if (m_timeSinceLastMove >= 500)
+	//MKOS: millisecondsPerMove -> movement speed
+	int millisecondsPerMove = 300;
+	if (m_timeSinceLastMove >= millisecondsPerMove)
 	{
-		m_timeSinceLastMove -= 500;
+		m_timeSinceLastMove -= millisecondsPerMove;
 		if (!m_path.empty())
 		{
 			AStarNode &node = *m_path.begin();
