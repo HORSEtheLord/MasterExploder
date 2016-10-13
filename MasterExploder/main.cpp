@@ -81,7 +81,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		return -1;
 	}
 
-	terrain = new Terrain(40, 30, true);
+	terrain = new Terrain(TERRAIN_WIDTH, TERRAIN_HEIGHT, true);
+
+	if (!AStarAlgorithm::Init(TERRAIN_WIDTH, TERRAIN_HEIGHT, terrain->GetMap()))
+	{
+		Logger::Log(L"AStarAlgorithm initialization failed.");
+		delete terrain;
+		delete graphics;
+		return -1;
+	}
+
 	unit = new Unit(0, 0);
 
 	ShowWindow(windowHandle, nCmdShow);
