@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <memory>
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
@@ -30,85 +31,85 @@ bool AStarAlgorithm::IsNodeBlocked(int x, int y) const
 	return m_map[x * m_height + y];
 }
 
-std::vector<AStarNode> AStarAlgorithm::GetNeighbours(const AStarNode &node) const
+std::vector<std::shared_ptr<AStarNode>> AStarAlgorithm::GetNeighbours(const std::shared_ptr<AStarNode> node) const
 {
-	std::vector<AStarNode> neighbours;
-	if (node.m_x > 0)
+	std::vector<std::shared_ptr<AStarNode>> neighbours;
+	if (node->m_x > 0)
 	{
-		if (!IsNodeBlocked(node.m_x - 1, node.m_y))
-			neighbours.push_back(AStarNode(node.m_x - 1, node.m_y));
-		/*if (node.m_y > 0)
-			neighbours.push_back(AStarNode(node.m_x - 1, node.m_y - 1));
-		if (node.m_y < m_height - 1)
-			neighbours.push_back(AStarNode(node.m_x - 1, node.m_y + 1));*/
+		if (!IsNodeBlocked(node->m_x - 1, node->m_y))
+			neighbours.push_back(std::make_shared<AStarNode>(AStarNode(node->m_x - 1, node->m_y)));
+		/*if (node->m_y > 0)
+			neighbours.push_back(AStarNode(node->m_x - 1, node->m_y - 1));
+		if (node->m_y < m_height - 1)
+			neighbours.push_back(AStarNode(node->m_x - 1, node->m_y + 1));*/
 	}
 
-	if (node.m_x < m_width - 1)
+	if (node->m_x < m_width - 1)
 	{
-		if (!IsNodeBlocked(node.m_x + 1, node.m_y))
-			neighbours.push_back(AStarNode(node.m_x + 1, node.m_y));
-		/*if (node.m_y > 0)
-			neighbours.push_back(AStarNode(node.m_x + 1, node.m_y - 1));
-		if (node.m_y < m_height - 1)
-			neighbours.push_back(AStarNode(node.m_x + 1, node.m_y + 1));*/
+		if (!IsNodeBlocked(node->m_x + 1, node->m_y))
+			neighbours.push_back(std::make_shared<AStarNode>(AStarNode(node->m_x + 1, node->m_y)));
+		/*if (node->m_y > 0)
+			neighbours.push_back(AStarNode(node->m_x + 1, node->m_y - 1));
+		if (node->m_y < m_height - 1)
+			neighbours.push_back(AStarNode(node->m_x + 1, node->m_y + 1));*/
 	}
 
-	if (node.m_y > 0)
-		if (!IsNodeBlocked(node.m_x, node.m_y - 1))
-			neighbours.push_back(AStarNode(node.m_x, node.m_y - 1));
-	if (node.m_y < m_height - 1)
-		if (!IsNodeBlocked(node.m_x, node.m_y + 1))
-			neighbours.push_back(AStarNode(node.m_x, node.m_y + 1));
+	if (node->m_y > 0)
+		if (!IsNodeBlocked(node->m_x, node->m_y - 1))
+			neighbours.push_back(std::make_shared<AStarNode>(AStarNode(node->m_x, node->m_y - 1)));
+	if (node->m_y < m_height - 1)
+		if (!IsNodeBlocked(node->m_x, node->m_y + 1))
+			neighbours.push_back(std::make_shared<AStarNode>(AStarNode(node->m_x, node->m_y + 1)));
 
 	return neighbours;
 }
 
-float AStarAlgorithm::GetEstimatedDistance(const AStarNode &from, const AStarNode &to) const
+float AStarAlgorithm::GetEstimatedDistance(const std::shared_ptr<AStarNode> from, const std::shared_ptr<AStarNode> to) const
 {
-	int xDistance = to.m_x - from.m_x;
-	int yDistance = to.m_y - from.m_y;
+	int xDistance = to->m_x - from->m_x;
+	int yDistance = to->m_y - from->m_y;
 
 	return sqrt(xDistance * xDistance - yDistance * yDistance);
 }
 
-std::vector<AStarNode> AStarAlgorithm::FindPath(const AStarNode &start, const AStarNode &goal) const
+std::vector<std::shared_ptr<AStarNode>> AStarAlgorithm::FindPath(const std::shared_ptr<AStarNode> start, const std::shared_ptr<AStarNode> goal) const
 {
-	int width = m_width;
-	auto hasher = [width](const AStarNode &node) { return std::hash<int>()(node.m_x * width + node.m_y); };
+	int height = m_height;
+	auto hasher = [height](const std::shared_ptr<AStarNode> node) { return std::hash<int>()(node->m_x * height + node->m_y); };
 
-	std::unordered_map<AStarNode, int, decltype(hasher)> fscore(10, hasher);
-	std::unordered_map<AStarNode, int, decltype(hasher)> gscore(10, hasher);
+	std::unordered_map<std::shared_ptr<AStarNode>, int, decltype(hasher)> fscore(10, hasher);
+	std::unordered_map<std::shared_ptr<AStarNode>, int, decltype(hasher)> gscore(10, hasher);
 	gscore[start] = 0;
-	std::unordered_map<AStarNode, int, decltype(hasher)> hscore(10, hasher);
-	std::unordered_set<AStarNode, decltype(hasher)> closedSet(10, hasher);
+	std::unordered_map<std::shared_ptr<AStarNode>, int, decltype(hasher)> hscore(10, hasher);
+	std::unordered_set<std::shared_ptr<AStarNode>, decltype(hasher)> closedSet(10, hasher);
 
-	auto cmp = [&fscore, &hasher](const AStarNode &first, const AStarNode &second)
+	auto cmp = [&fscore, &hasher](const std::shared_ptr<AStarNode> first, const std::shared_ptr<AStarNode> second)
 	{
 		if (fscore.find(first) == fscore.cend())
-			fscore.insert(std::unordered_map<AStarNode, int, decltype(hasher)>::value_type(first, std::numeric_limits<int>::max()));
+			fscore.insert(std::unordered_map<std::shared_ptr<AStarNode>, int, decltype(hasher)>::value_type(first, std::numeric_limits<int>::max()));
 
 		if (fscore.find(second) == fscore.cend())
-			fscore.insert(std::unordered_map<AStarNode, int, decltype(hasher)>::value_type(second, std::numeric_limits<int>::max()));
+			fscore.insert(std::unordered_map<std::shared_ptr<AStarNode>, int, decltype(hasher)>::value_type(second, std::numeric_limits<int>::max()));
 
 		return fscore.at(first) < fscore.at(second);
 	};
 
-	std::set<AStarNode, decltype(cmp)> openSet(cmp);
+	std::set<std::shared_ptr<AStarNode>, decltype(cmp)> openSet(cmp);
 	openSet.insert(start);
 
-	std::unordered_map<AStarNode, AStarNode, decltype(hasher)> cameFrom(10, hasher);
+	std::unordered_map<std::shared_ptr<AStarNode>, std::shared_ptr<AStarNode>, decltype(hasher)> cameFrom(10, hasher);
 
 	while (!openSet.empty())
 	{
-		AStarNode node = *(openSet.begin());
-		if (node == goal)
+		std::shared_ptr<AStarNode> node = *(openSet.begin());
+		if (*node == *goal)
 		{
-			std::vector<AStarNode> path{ node };
+			std::vector<std::shared_ptr<AStarNode>> path{ node };
 
 			auto it = cameFrom.find(node);
 			while (it != cameFrom.cend())
 			{
-				const AStarNode &next = it->second;
+				const std::shared_ptr<AStarNode> next = it->second;
 				path.push_back(next);
 				it = cameFrom.find(next);
 			}
@@ -120,7 +121,7 @@ std::vector<AStarNode> AStarAlgorithm::FindPath(const AStarNode &start, const AS
 		openSet.erase(openSet.begin());
 		closedSet.insert(node);
 
-		for (const AStarNode &neighbour : GetNeighbours(node))
+		for (const std::shared_ptr<AStarNode> neighbour : GetNeighbours(node))
 		{
 			if (closedSet.find(neighbour) != closedSet.cend())
 				continue;
@@ -144,7 +145,7 @@ std::vector<AStarNode> AStarAlgorithm::FindPath(const AStarNode &start, const AS
 				//nie chcê go robiæ u siebie
 				auto it = cameFrom.find(neighbour);
 				if (it == cameFrom.cend())
-					cameFrom.insert(std::unordered_map<AStarNode, AStarNode, decltype(hasher)>::value_type(neighbour, node));
+					cameFrom.insert(std::unordered_map<std::shared_ptr<AStarNode>, std::shared_ptr<AStarNode>, decltype(hasher)>::value_type(neighbour, node));
 				else
 					it->second = node;
 
@@ -154,6 +155,6 @@ std::vector<AStarNode> AStarAlgorithm::FindPath(const AStarNode &start, const AS
 		}
 	}
 
-	std::vector<AStarNode> path;
+	std::vector<std::shared_ptr<AStarNode>> path;
 	return path;
 }

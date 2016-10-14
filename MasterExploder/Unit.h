@@ -11,7 +11,7 @@ class Unit
 private:
 	ID2D1Bitmap *m_bmp = nullptr;
 	int m_locationX, m_locationY;
-	std::vector<AStarNode> m_path;
+	std::vector<std::shared_ptr<AStarNode>> m_path;
 	int m_timeSinceLastMove = 0;
 public:
 	Unit(int locationX, int locationY);
