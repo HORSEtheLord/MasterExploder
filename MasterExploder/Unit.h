@@ -26,4 +26,5 @@ public:
 	void Draw(std::shared_ptr<Graphics> graphics) const;
 
 	void Move(int locationX, int locationY);
+	void Attack(int locationX, int locationY);
 };
