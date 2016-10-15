@@ -52,6 +52,23 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 	}
 
+	if (uMsg == WM_RBUTTONUP)
+	{
+		if (unit)
+		{
+			int xPos = GET_X_LPARAM(lParam);
+			int yPos = GET_Y_LPARAM(lParam);
+
+			int newX = xPos / TILE_WIDTH;
+			int newY = yPos / TILE_HEIGHT;
+
+			if (building && building->GetLocationX() == newX && building->GetLocationY() == newY)
+			{
+				unit->Attack(newX, newY);
+			}
+		}
+	}
+
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 

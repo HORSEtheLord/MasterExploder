@@ -20,4 +20,7 @@ public:
 
 	bool Init(std::shared_ptr<Graphics> graphics);
 	void Draw(std::shared_ptr<Graphics> graphics) const;
+
+	int GetLocationX() const { return m_locationX; }
+	int GetLocationY() const { return m_locationY; }
 };

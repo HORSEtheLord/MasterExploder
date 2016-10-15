@@ -49,12 +49,23 @@ void Unit::Draw(std::shared_ptr<Graphics> graphics) const
 
 void Unit::Move(int locationX, int locationY)
 {
-	/*m_locationX = locationX;
-	m_locationY = locationY;*/
-
-	m_path = AStarAlgorithm::GetInstance()->FindPath(
-		CALCULATE_KEY(m_locationX, m_locationY), 
+	std::vector<int> path = AStarAlgorithm::GetInstance()->FindPath(
+		CALCULATE_KEY(m_locationX, m_locationY),
 		CALCULATE_KEY(locationX, locationY));
+
+	if (!path.empty())
+		m_path = path;
+}
+
+void Unit::Attack(int locationX, int locationY)
+{
+	std::vector<int> path = AStarAlgorithm::GetInstance()->FindPath(
+		CALCULATE_KEY(m_locationX, m_locationY),
+		CALCULATE_KEY(locationX, locationY),
+		false);
+	
+	if (!path.empty())
+		m_path = path;
 }
 
 void Unit::Update()
