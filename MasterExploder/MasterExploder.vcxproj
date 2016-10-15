@@ -121,6 +121,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AStarAlgorithm.cpp" />
+    <ClCompile Include="Building.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -132,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AStarAlgorithm.h" />
+    <ClInclude Include="Building.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="Logger.h" />
