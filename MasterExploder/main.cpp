@@ -1,4 +1,5 @@
 #include <ctime>
+#include <memory>
 #include <Windows.h>
 #include <Windowsx.h>
 
@@ -9,9 +10,9 @@
 #include "Utils.h"
 #include "Timer.h"
 
-Graphics *graphics;
-Terrain *terrain;
-Unit *unit;
+std::shared_ptr<Graphics> graphics;
+std::shared_ptr<Terrain> terrain;
+std::shared_ptr<Unit> unit;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -74,6 +75,15 @@ HWND createWindow(HINSTANCE hInstance)
 	return windowHandle;
 }
 
+void unitialize()
+{
+	unit = nullptr;
+	terrain = nullptr;
+	graphics = nullptr;
+
+	CoUninitialize();
+}
+
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int nCmdShow)
 {
 	Logger::Clear();
@@ -87,53 +97,54 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		return -1;
 	}
 
-	graphics = new Graphics();
+	HRESULT hr = CoInitialize(NULL);
+
+	if (hr != S_OK)
+	{
+		Logger::Log(L"CoInitialize failed.");
+		return -1;
+	}
+
+	graphics = std::make_shared<Graphics>();
 
 	if (!graphics->Init(windowHandle))
 	{
 		Logger::Log(L"Graphics initialization failed.");
-		delete graphics;
+		unitialize();
 		return -1;
 	}
 
-	terrain = new Terrain(TERRAIN_WIDTH, TERRAIN_HEIGHT, true);
+	terrain = std::make_shared<Terrain>(TERRAIN_WIDTH, TERRAIN_HEIGHT, true);
 
 	if (!AStarAlgorithm::Init(TERRAIN_WIDTH, TERRAIN_HEIGHT, terrain->GetMap()))
 	{
 		Logger::Log(L"AStarAlgorithm initialization failed.");
-		delete terrain;
-		delete graphics;
+		unitialize();
 		return -1;
 	}
 
-	unit = new Unit(0, 0);
+	unit = std::make_shared<Unit>(0, 0);
 
 	ShowWindow(windowHandle, nCmdShow);
 
 	if (!terrain->Init(graphics))
 	{
 		Logger::Log(L"Terrain initialization failed.");
-		delete unit;
-		delete terrain;
-		delete graphics;
+		unitialize();
 		return -1;
 	}
 
 	if (!unit->Init(graphics))
 	{
 		Logger::Log(L"Unit initialization failed.");
-		delete unit;
-		delete terrain;
-		delete graphics;
+		unitialize();
 		return -1;
 	}
 
 	if (!Timer::Init())
 	{
 		Logger::Log(L"Timer initialization failed.");
-		delete unit;
-		delete terrain;
-		delete graphics;
+		unitialize();
 		return -1;
 	}
 
@@ -145,11 +156,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 	{
 		if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
 		{
-			if (message.message == WM_DESTROY)
-			{
-				delete unit;
-				delete terrain;
-			}
+			//if (message.message == WM_DESTROY || message.message == WM_QUIT)
+			//{
+			//	unit = nullptr;
+			//	terrain = nullptr;
+			//}
 
 			DispatchMessage(&message);
 		}
@@ -170,7 +181,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		}
 	}
 
-	delete graphics;
+	unitialize();
 
 	Logger::Log(L"Application ended.");
 	return 0;

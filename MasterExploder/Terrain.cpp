@@ -30,7 +30,7 @@ Terrain::~Terrain()
 		m_bmpBlocked->Release();
 }
 
-bool Terrain::Init(Graphics *graphics)
+bool Terrain::Init(std::shared_ptr<Graphics> graphics)
 {
 	wchar_t *filenameFree = L"tile1.png";
 
@@ -52,7 +52,7 @@ bool Terrain::Init(Graphics *graphics)
 }
 
 
-void Terrain::Draw(Graphics *graphics) const
+void Terrain::Draw(std::shared_ptr<Graphics> graphics) const
 {
 	int windowWidth = graphics->GetRenderTarget()->GetSize().width;
 	int windowHeight = graphics->GetRenderTarget()->GetSize().height;

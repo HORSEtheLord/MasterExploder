@@ -1,6 +1,7 @@
 #pragma once
 
 #include <d2d1.h>
+#include <memory>
 #include <wincodec.h>
 
 #include "Graphics.h"
@@ -15,10 +16,11 @@ private:
 	bool m_drawMesh = false;
 public:
 	Terrain(int terrainWidth, int terrainHeight, bool drawMesh = false);
+	Terrain(const Terrain &other) = delete;
 	~Terrain();
 
-	bool* GetMap() { return m_map; }
+	bool* GetMap() const { return m_map; }
 
-	bool Init(Graphics *graphics);
-	void Draw(Graphics *graphics) const;
+	bool Init(std::shared_ptr<Graphics> graphics);
+	void Draw(std::shared_ptr<Graphics> graphics) const;
 };
