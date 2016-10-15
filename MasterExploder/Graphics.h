@@ -10,6 +10,7 @@ private:
 	ID2D1HwndRenderTarget *renderTarget = nullptr;
 public:
 	Graphics();
+	Graphics(const Graphics &other) = delete;
 	~Graphics();
 
 	bool Init(HWND windowHandle);

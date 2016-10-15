@@ -12,7 +12,7 @@ void safeReleaseResources(IWICImagingFactory *wicFactory,
 	if (wicConverter) wicConverter->Release();
 }
 
-bool ImageLoader::LoadSprite(Graphics *graphics, wchar_t *filename, ID2D1Bitmap **bmp)
+bool ImageLoader::LoadSprite(std::shared_ptr<Graphics> graphics, wchar_t *filename, ID2D1Bitmap **bmp)
 {
 	HRESULT res;
 

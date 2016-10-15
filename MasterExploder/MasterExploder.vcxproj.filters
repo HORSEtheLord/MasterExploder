@@ -79,5 +79,8 @@
     <Image Include="tile2.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="building1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <d2d1.h>
+#include <memory>
 #include <wincodec.h>
 
 #include "AStarAlgorithm.h"
@@ -15,11 +16,12 @@ private:
 	int m_timeSinceLastMove = 0;
 public:
 	Unit(int locationX, int locationY);
+	Unit(const Unit &other) = delete;
 	~Unit();
 
-	bool Init(Graphics *graphics);
+	bool Init(std::shared_ptr<Graphics> graphics);
 	void Update();
-	void Draw(Graphics *graphics) const;
+	void Draw(std::shared_ptr<Graphics> graphics) const;
 
 	void Move(int locationX, int locationY);
 };

@@ -19,11 +19,11 @@ AStarAlgorithm::~AStarAlgorithm()
 {
 }
 
-AStarAlgorithm* AStarAlgorithm::m_instance = nullptr;
+std::shared_ptr<AStarAlgorithm> AStarAlgorithm::m_instance = nullptr;
 
 bool AStarAlgorithm::Init(int width, int height, bool *map)
 {
-	m_instance = new AStarAlgorithm(width, height, map);
+	m_instance = std::make_shared<AStarAlgorithm>(width, height, map);
 	return true;
 }
 
