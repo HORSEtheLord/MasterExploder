@@ -7,6 +7,7 @@
 #include "Terrain.h"
 #include "Unit.h"
 #include "Utils.h"
+#include "Timer.h"
 
 Graphics *graphics;
 Terrain *terrain;
@@ -113,13 +114,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		return -1;
 	}
 
-	LARGE_INTEGER t;
+	if (!Timer::Init())
+	{
+		Logger::Log(L"Timer initialization failed.");
+		delete unit;
+		delete terrain;
+		delete graphics;
+		return -1;
+	}
 
-	QueryPerformanceFrequency(&t);
-	long long frequency = t.QuadPart;
-
-	QueryPerformanceCounter(&t);
-	long long previousTime = t.QuadPart;
 	double lag = 0.0;
 
 	MSG message;
@@ -138,11 +141,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		}
 		else
 		{
-			QueryPerformanceCounter(&t);
-			long long currentTime = t.QuadPart;
-			double elapsedTime = currentTime - previousTime;
-			previousTime = currentTime;
-			lag += 1000 * elapsedTime / frequency;
+			lag += Timer::GetInstance()->Tick();
 
 			while (lag >= MS_PER_UPDATE)
 			{
