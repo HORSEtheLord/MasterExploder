@@ -83,8 +83,34 @@ float AStarAlgorithm::GetEstimatedDistance(int from, int to) const
 	return estimatedDistance;
 }
 
-std::vector<int> AStarAlgorithm::FindPath(int start, int goal) const
+std::vector<int> AStarAlgorithm::FindPath(int start, int goal, bool includeGoalInPath) const
 {
+	std::unordered_set<int> goalNodes;
+
+	if (includeGoalInPath)
+	{
+		if (IsNodeBlocked(goal))
+		{
+			std::vector<int> path;
+			return path;
+		}
+
+		goalNodes.insert(goal);
+	}
+	else
+	{
+		for (int neighbour : GetNeighbours(goal))
+		{
+			goalNodes.insert(neighbour);
+		}
+	}
+
+	if (goalNodes.empty())
+	{
+		std::vector<int> path;
+		return path;
+	}
+
 	std::unordered_map<int, float> fscore;
 	std::unordered_map<int, int> gscore;
 	gscore[start] = 0;
@@ -118,7 +144,7 @@ std::vector<int> AStarAlgorithm::FindPath(int start, int goal) const
 				node = *it;
 		}
 
-		if (node == goal)
+		if (goalNodes.find(node) != goalNodes.cend())
 		{
 			std::vector<int> path{ node };
 
