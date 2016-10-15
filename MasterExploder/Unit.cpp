@@ -3,8 +3,8 @@
 #include "Utils.h"
 #include "ImageLoader.h"
 
-Unit::Unit(int locationX, int locationY)
-	: m_locationX(locationX), m_locationY(locationY)
+Unit::Unit(int locationX, int locationY, int damage)
+	: m_locationX(locationX), m_locationY(locationY), m_damage(damage)
 {
 }
 

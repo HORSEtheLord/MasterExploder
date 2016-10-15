@@ -9,10 +9,12 @@
 #include "Unit.h"
 #include "Utils.h"
 #include "Timer.h"
+#include "Building.h"
 
 std::shared_ptr<Graphics> graphics;
 std::shared_ptr<Terrain> terrain;
 std::shared_ptr<Unit> unit;
+std::shared_ptr<Building> building;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -80,6 +82,7 @@ void unitialize()
 	unit = nullptr;
 	terrain = nullptr;
 	graphics = nullptr;
+	building = nullptr;
 
 	CoUninitialize();
 }
@@ -96,7 +99,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		Logger::Log(L"Window creation failed.");
 		return -1;
 	}
-
+	
 	HRESULT hr = CoInitialize(NULL);
 
 	if (hr != S_OK)
@@ -123,8 +126,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		return -1;
 	}
 
-	unit = std::make_shared<Unit>(0, 0);
-
 	ShowWindow(windowHandle, nCmdShow);
 
 	if (!terrain->Init(graphics))
@@ -134,9 +135,20 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		return -1;
 	}
 
+	unit = std::make_shared<Unit>(0, 0, 40);
+
 	if (!unit->Init(graphics))
 	{
 		Logger::Log(L"Unit initialization failed.");
+		unitialize();
+		return -1;
+	}
+
+	building = std::make_shared<Building>(39, 29, 100);
+
+	if (!building->Init(graphics))
+	{
+		Logger::Log(L"Building initialization failed.");
 		unitialize();
 		return -1;
 	}
@@ -177,6 +189,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 			graphics->BeginDraw();
 			terrain->Draw(graphics);
 			unit->Draw(graphics);
+			building->Draw(graphics);
 			graphics->EndDraw();
 		}
 	}

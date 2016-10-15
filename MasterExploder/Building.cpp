@@ -30,7 +30,7 @@ bool Building::ReceiveDamage(int damage)
 	return m_isDestroyed;
 }
 
-bool Building::Init(Graphics * graphics)
+bool Building::Init(std::shared_ptr<Graphics> graphics)
 {
 	wchar_t *filename = L"building1.png";
 
@@ -43,7 +43,7 @@ bool Building::Init(Graphics * graphics)
 	return true;
 }
 
-void Building::Draw(Graphics * graphics) const
+void Building::Draw(std::shared_ptr<Graphics> graphics) const
 {
 	int width = TILE_WIDTH;
 	int height = TILE_HEIGHT;

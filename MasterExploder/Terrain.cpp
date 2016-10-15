@@ -14,7 +14,8 @@ Terrain::Terrain(int terrainWidth, int terrainHeight, bool drawMesh)
 	std::default_random_engine engine(time(0));
 	std::uniform_int_distribution<unsigned> distribution(0, 4);
 	m_map[0] = false;
-	for (int i = 1; i < terrainWidth * terrainHeight; ++i)
+	m_map[terrainWidth * terrainHeight -1] = true;
+	for (int i = 1; i < terrainWidth * terrainHeight -1; ++i)
 	{
 		m_map[i] = !distribution(engine);
 	}

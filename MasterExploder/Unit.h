@@ -14,8 +14,10 @@ private:
 	int m_locationX, m_locationY;
 	std::vector<int> m_path;
 	int m_timeSinceLastMove = 0;
+
+	int m_damage;
 public:
-	Unit(int locationX, int locationY);
+	Unit(int locationX, int locationY, int damage);
 	Unit(const Unit &other) = delete;
 	~Unit();
 

@@ -1,8 +1,8 @@
 #pragma once
 #include <d2d1.h>
-#include "Graphics.h"
+#include <memory>
 
-class Graphics;
+#include "Graphics.h"
 
 class Building
 {
@@ -13,10 +13,11 @@ private:
 	bool m_isDestroyed = false;
 public:
 	Building(int locationX, int locationY, int hp);
+	Building(const Building &other) = delete;
 	~Building();
 
 	bool ReceiveDamage(int damage);
 
-	bool Init(Graphics *graphics);
-	void Draw(Graphics *graphics) const;
+	bool Init(std::shared_ptr<Graphics> graphics);
+	void Draw(std::shared_ptr<Graphics> graphics) const;
 };
