@@ -31,7 +31,21 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			int newX = xPos / TILE_WIDTH;
 			int newY = yPos / TILE_HEIGHT;
 
+			/*LARGE_INTEGER t;
+			QueryPerformanceFrequency(&t);
+			long long frequency = t.QuadPart;
+
+			QueryPerformanceCounter(&t);
+			long long previousTime = t.QuadPart;*/
+
 			unit->Move(newX, newY);
+
+			/*QueryPerformanceCounter(&t);
+			long long currentTime = t.QuadPart;
+			double elapsedTime = currentTime - previousTime;
+			previousTime = currentTime;
+			double milliseconds = 1000 * elapsedTime / frequency;
+			milliseconds = 0;*/
 		}
 	}
 

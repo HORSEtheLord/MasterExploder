@@ -1,8 +1,7 @@
 #pragma once
 
+#include <memory>
 #include <vector>
-
-#include "AStarNode.h"
 
 class AStarAlgorithm
 {
@@ -12,9 +11,9 @@ private:
 	int m_width, m_height;
 	bool *m_map = nullptr;
 
-	bool IsNodeBlocked(int x, int y) const;
-	std::vector<AStarNode> GetNeighbours(const AStarNode &node) const;
-	float GetEstimatedDistance(const AStarNode &from, const AStarNode &to) const;
+	bool IsNodeBlocked(int key) const;
+	std::vector<int> GetNeighbours(int node) const;
+	float GetEstimatedDistance(int from, int to) const;
 
 	AStarAlgorithm(int width, int height, bool *map);
 public:
@@ -23,5 +22,5 @@ public:
 	static bool Init(int width, int height, bool *map);
 	static AStarAlgorithm* GetInstance() { return m_instance; }
 
-	std::vector<AStarNode> FindPath(const AStarNode &start, const AStarNode &goal) const;
+	std::vector<int> FindPath(int start, int goal) const;
 };
