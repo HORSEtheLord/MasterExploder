@@ -15,11 +15,11 @@ Timer::~Timer()
 {
 }
 
-Timer* Timer::m_instance = nullptr;
+std::shared_ptr<Timer> Timer::m_instance = nullptr;
 
 bool Timer::Init()
 {
-	m_instance = new Timer();
+	m_instance = std::make_shared<Timer>();
 	return true;
 }
 

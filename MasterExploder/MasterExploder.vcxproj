@@ -143,6 +143,7 @@
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="building1.png" />
     <Image Include="tile1.png" />
     <Image Include="tile2.png" />
     <Image Include="unit1.png" />

@@ -14,7 +14,7 @@ Unit::~Unit()
 		m_bmp->Release();
 }
 
-bool Unit::Init(Graphics *graphics)
+bool Unit::Init(std::shared_ptr<Graphics> graphics)
 {
 	wchar_t *filename = L"unit1.png";
 
@@ -27,7 +27,7 @@ bool Unit::Init(Graphics *graphics)
 	return true;
 }
 
-void Unit::Draw(Graphics *graphics) const
+void Unit::Draw(std::shared_ptr<Graphics> graphics) const
 {
 	int width = TILE_WIDTH;
 	int height = TILE_HEIGHT;
