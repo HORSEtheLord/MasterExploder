@@ -3,8 +3,6 @@
 #include <memory>
 #include <vector>
 
-#include "AStarNode.h"
-
 class AStarAlgorithm
 {
 private:
@@ -13,9 +11,9 @@ private:
 	int m_width, m_height;
 	bool *m_map = nullptr;
 
-	bool IsNodeBlocked(int x, int y) const;
-	std::vector<std::shared_ptr<AStarNode>> GetNeighbours(const std::shared_ptr<AStarNode> node) const;
-	float GetEstimatedDistance(const std::shared_ptr<AStarNode> from, const std::shared_ptr<AStarNode> to) const;
+	bool IsNodeBlocked(int key) const;
+	std::vector<int> GetNeighbours(int node) const;
+	float GetEstimatedDistance(int from, int to) const;
 
 	AStarAlgorithm(int width, int height, bool *map);
 public:
@@ -24,5 +22,5 @@ public:
 	static bool Init(int width, int height, bool *map);
 	static AStarAlgorithm* GetInstance() { return m_instance; }
 
-	std::vector<std::shared_ptr<AStarNode>> FindPath(const std::shared_ptr<AStarNode> start, const std::shared_ptr<AStarNode> goal) const;
+	std::vector<int> FindPath(int start, int goal) const;
 };

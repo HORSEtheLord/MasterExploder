@@ -49,8 +49,8 @@ void Unit::Move(int locationX, int locationY)
 	m_locationY = locationY;*/
 
 	m_path = AStarAlgorithm::GetInstance()->FindPath(
-		std::make_shared<AStarNode>(AStarNode(m_locationX, m_locationY)), 
-		std::make_shared<AStarNode>(AStarNode(locationX, locationY)));
+		CALCULATE_KEY(m_locationX, m_locationY), 
+		CALCULATE_KEY(locationX, locationY));
 }
 
 void Unit::Update()
@@ -64,9 +64,9 @@ void Unit::Update()
 		m_timeSinceLastMove -= millisecondsPerMove;
 		if (!m_path.empty())
 		{
-			const std::shared_ptr<AStarNode> node = *m_path.begin();
-			m_locationX = node->GetX();
-			m_locationY = node->GetY();
+			int node = *m_path.begin();
+			m_locationX = CALCULATE_X(node);
+			m_locationY = CALCULATE_Y(node);
 			m_path.erase(m_path.begin());
 		}
 	}
