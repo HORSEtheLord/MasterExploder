@@ -135,7 +135,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		return -1;
 	}
 
-	unit = std::make_shared<Unit>(0, 0, 40);
+	unit = std::make_shared<Unit>(0, 0, 40, 900);
 
 	if (!unit->Init(graphics))
 	{

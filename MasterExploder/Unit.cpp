@@ -3,9 +3,13 @@
 #include "Utils.h"
 #include "ImageLoader.h"
 
-Unit::Unit(int locationX, int locationY, int damage)
-	: m_locationX(locationX), m_locationY(locationY), m_damage(damage)
+Unit::Unit(int locationX, int locationY, int damage, unsigned int movementSpeed)
+	: m_locationX(locationX), m_locationY(locationY), m_damage(damage), m_movementSpeed(movementSpeed)
 {
+	if (m_movementSpeed > MAX_MOVEMENT_SPEED)
+	{
+		m_movementSpeed = MAX_MOVEMENT_SPEED;
+	}
 }
 
 Unit::~Unit()
@@ -58,7 +62,10 @@ void Unit::Update()
 	m_timeSinceLastMove += MS_PER_UPDATE;
 
 	//MKOS: millisecondsPerMove -> movement speed
-	int millisecondsPerMove = 300;
+	/*int millisecondsPerMove = 300;*/
+	int defaultMovementSpeed = 1000;
+	int millisecondsPerMove = defaultMovementSpeed - m_movementSpeed;
+
 	if (m_timeSinceLastMove >= millisecondsPerMove)
 	{
 		m_timeSinceLastMove -= millisecondsPerMove;

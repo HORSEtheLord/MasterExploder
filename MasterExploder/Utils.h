@@ -8,6 +8,8 @@
 
 #define MS_PER_UPDATE 50
 
+#define MAX_MOVEMENT_SPEED 950
+
 #define CALCULATE_X(key) ((key) / TERRAIN_HEIGHT)
 #define CALCULATE_Y(key) ((key) % TERRAIN_HEIGHT)
 #define CALCULATE_KEY(x, y) ((x) * TERRAIN_HEIGHT + (y))
