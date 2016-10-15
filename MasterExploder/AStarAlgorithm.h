@@ -24,5 +24,5 @@ public:
 	static bool Init(int width, int height, bool *map);
 	static std::shared_ptr<AStarAlgorithm> GetInstance() { return m_instance; }
 
-	std::vector<int> FindPath(int start, int goal) const;
+	std::vector<int> FindPath(int start, int goal, bool includeGoalInPath = true) const;
 };
