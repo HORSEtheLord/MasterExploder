@@ -1,7 +1,9 @@
 #pragma once
 
-#include <wincodec.h>
+#define TERRAIN_WIDTH 40
+#define TERRAIN_HEIGHT 30
 
-#define TILE_WIDTH 40
-#define TILE_HEIGHT 40
+#define TILE_WIDTH 20
+#define TILE_HEIGHT 20
+
 #define MS_PER_UPDATE 50
