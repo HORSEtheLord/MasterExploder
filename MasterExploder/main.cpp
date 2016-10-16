@@ -136,15 +136,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 
 	terrain = std::make_shared<Terrain>(TERRAIN_WIDTH, TERRAIN_HEIGHT, true);
 
-	if (!AStarAlgorithm::Init(TERRAIN_WIDTH, TERRAIN_HEIGHT, terrain->GetMap()))
-	{
-		Logger::Log(L"AStarAlgorithm initialization failed.");
-		unitialize();
-		return -1;
-	}
-
-	ShowWindow(windowHandle, nCmdShow);
-
 	if (!terrain->Init(graphics))
 	{
 		Logger::Log(L"Terrain initialization failed.");
@@ -161,6 +152,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		return -1;
 	}
 
+	if (!AStarAlgorithm::Init(TERRAIN_WIDTH, TERRAIN_HEIGHT, terrain->GetMap()))
+	{
+		Logger::Log(L"AStarAlgorithm initialization failed.");
+		unitialize();
+		return -1;
+	}
+
 	building = std::make_shared<Building>(39, 29, 100);
 
 	if (!building->Init(graphics))
@@ -169,6 +167,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		unitialize();
 		return -1;
 	}
+
+	ShowWindow(windowHandle, nCmdShow);
 
 	if (!Timer::Init())
 	{
@@ -185,17 +185,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 	{
 		if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
 		{
-			//if (message.message == WM_DESTROY || message.message == WM_QUIT)
-			//{
-			//	unit = nullptr;
-			//	terrain = nullptr;
-			//}
-
 			DispatchMessage(&message);
 		}
 		else
 		{
-			lag += Timer::GetInstance()->Tick();
+			lag += Timer::GetInstance().Tick();
 
 			while (lag >= MS_PER_UPDATE)
 			{
@@ -205,8 +199,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 
 			graphics->BeginDraw();
 			terrain->Draw(graphics);
-			unit->Draw(graphics);
 			building->Draw(graphics);
+			unit->Draw(graphics);
 			graphics->EndDraw();
 		}
 	}

@@ -10,16 +10,10 @@ Unit::Unit(int locationX, int locationY, int damage, unsigned int movementSpeed)
 	{
 		m_movementSpeed = MAX_MOVEMENT_SPEED;
 	}
-	if (m_movementSpeed == 0)
+	else if (m_movementSpeed == 0)
 	{
 		m_movementSpeed = 1;
 	}
-}
-
-Unit::Unit(int locationX, int locationY, int damage)
-	: m_locationX(locationX), m_locationY(locationY), m_damage(damage)
-{
-		m_movementSpeed = 1;
 }
 
 Unit::~Unit()
@@ -59,7 +53,7 @@ void Unit::Draw(std::shared_ptr<Graphics> graphics) const
 
 void Unit::Move(int locationX, int locationY)
 {
-	std::vector<int> path = AStarAlgorithm::GetInstance()->FindPath(
+	std::vector<int> path = AStarAlgorithm::GetInstance().FindPath(
 		CALCULATE_KEY(m_locationX, m_locationY),
 		CALCULATE_KEY(locationX, locationY));
 
@@ -69,7 +63,7 @@ void Unit::Move(int locationX, int locationY)
 
 void Unit::Attack(int locationX, int locationY)
 {
-	std::vector<int> path = AStarAlgorithm::GetInstance()->FindPath(
+	std::vector<int> path = AStarAlgorithm::GetInstance().FindPath(
 		CALCULATE_KEY(m_locationX, m_locationY),
 		CALCULATE_KEY(locationX, locationY),
 		false);
@@ -82,8 +76,6 @@ void Unit::Update()
 {
 	m_timeSinceLastMove += MS_PER_UPDATE;
 
-	//MKOS: millisecondsPerMove -> movement speed
-	/*int millisecondsPerMove = 300;*/
 	int defaultMovementSpeed = 1000;
 	int millisecondsPerMove = defaultMovementSpeed / m_movementSpeed;
 	if (millisecondsPerMove < MS_PER_UPDATE)

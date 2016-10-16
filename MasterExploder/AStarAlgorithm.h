@@ -6,23 +6,25 @@
 class AStarAlgorithm
 {
 private:
-	static std::shared_ptr<AStarAlgorithm> m_instance;
-
-	int m_width, m_height;
-	bool *m_map = nullptr;
+	size_t m_width = 0, m_height = 0;
+	std::shared_ptr<std::vector<bool>> m_map = nullptr;
 
 	bool IsNodeBlocked(int key) const;
 	std::vector<int> GetNeighbours(int node) const;
 	float GetEstimatedDistance(int from, int to) const;
-
+	AStarAlgorithm();
 public:
-	//MKOS: TODO private
-	AStarAlgorithm(int width, int height, bool *map);
-	AStarAlgorithm(const AStarAlgorithm &other) = delete;
+	AStarAlgorithm(const AStarAlgorithm&) = delete;
 	~AStarAlgorithm();
 
-	static bool Init(int width, int height, bool *map);
-	static std::shared_ptr<AStarAlgorithm> GetInstance() { return m_instance; }
+	void operator=(const AStarAlgorithm&) = delete;
+
+	static bool Init(size_t width, size_t height, std::shared_ptr<std::vector<bool>> map);
+	static AStarAlgorithm& GetInstance()
+	{ 
+		static AStarAlgorithm instance;
+		return instance; 
+	}
 
 	std::vector<int> FindPath(int start, int goal, bool includeGoalInPath = true) const;
 };

@@ -10,8 +10,7 @@
 #include "AStarAlgorithm.h"
 #include "Utils.h"
 
-AStarAlgorithm::AStarAlgorithm(int width, int height, bool *map)
-	: m_width(width), m_height(height), m_map(map)
+AStarAlgorithm::AStarAlgorithm()
 {
 }
 
@@ -19,17 +18,17 @@ AStarAlgorithm::~AStarAlgorithm()
 {
 }
 
-std::shared_ptr<AStarAlgorithm> AStarAlgorithm::m_instance = nullptr;
-
-bool AStarAlgorithm::Init(int width, int height, bool *map)
+bool AStarAlgorithm::Init(size_t width, size_t height, std::shared_ptr<std::vector<bool>> map)
 {
-	m_instance = std::make_shared<AStarAlgorithm>(width, height, map);
+	GetInstance().m_width = width;
+	GetInstance().m_height = height;
+	GetInstance().m_map = map;
 	return true;
 }
 
 bool AStarAlgorithm::IsNodeBlocked(int key) const
 {
-	return m_map[key];
+	return (*m_map)[key];
 }
 
 std::vector<int> AStarAlgorithm::GetNeighbours(int node) const
@@ -49,7 +48,7 @@ std::vector<int> AStarAlgorithm::GetNeighbours(int node) const
 			neighbours.push_back(AStarNode(node->m_x - 1, node->m_y + 1));*/
 	}
 
-	if (x < m_width - 1)
+	if (x + 1 < m_width)
 	{
 		key = CALCULATE_KEY(x + 1, y);
 		if (!IsNodeBlocked(key))
@@ -66,7 +65,7 @@ std::vector<int> AStarAlgorithm::GetNeighbours(int node) const
 		if (!IsNodeBlocked(key))
 			neighbours.push_back(key);
 	}
-	if (y < m_height - 1)
+	if (y + 1 < m_height)
 	{
 		key = CALCULATE_KEY(x, y + 1);
 		if (!IsNodeBlocked(key))

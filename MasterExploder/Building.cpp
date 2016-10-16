@@ -4,9 +4,8 @@
 #include "Utils.h"
 
 Building::Building(int locationX, int locationY, int hp)
-	: m_locationX(locationX), m_locationY(locationY), m_maxHitPoints(hp)
+	: m_locationX(locationX), m_locationY(locationY), m_maxHitPoints(hp), m_currentHitPoints(hp)
 {
-
 }
 
 Building::~Building()

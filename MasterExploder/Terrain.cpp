@@ -6,25 +6,24 @@
 #include "Utils.h"
 #include "ImageLoader.h"
 
-Terrain::Terrain(int terrainWidth, int terrainHeight, bool drawMesh)
+Terrain::Terrain(size_t terrainWidth, size_t terrainHeight, bool drawMesh)
 	: m_terrainWidth(terrainWidth), m_terrainHeight(terrainHeight), m_drawMesh(drawMesh)
 {
-	m_map = new bool[terrainWidth * terrainHeight];
+	m_map = std::make_shared<std::vector<bool>>();
+	m_map->reserve(terrainWidth * terrainHeight);
 
 	std::default_random_engine engine(time(0));
 	std::uniform_int_distribution<unsigned> distribution(0, 4);
-	m_map[0] = false;
-	m_map[terrainWidth * terrainHeight -1] = true;
-	for (int i = 1; i < terrainWidth * terrainHeight -1; ++i)
+	m_map->push_back(false);
+	for (int i = 1; i + 1 < terrainWidth * terrainHeight; ++i)
 	{
-		m_map[i] = !distribution(engine);
+		m_map->push_back(!distribution(engine));
 	}
+	m_map->push_back(true);
 }
 
 Terrain::~Terrain()
 {
-	if (m_map)
-		delete m_map;
 	if (m_bmpFree)
 		m_bmpFree->Release();
 	if (m_bmpBlocked)
@@ -69,7 +68,7 @@ void Terrain::Draw(std::shared_ptr<Graphics> graphics) const
 	{
 		for (int j = 0; j < m_terrainHeight; ++j)
 		{
-			bmp = m_map[i * m_terrainHeight + j] ? m_bmpBlocked : m_bmpFree;
+			bmp = (*m_map)[i * m_terrainHeight + j] ? m_bmpBlocked : m_bmpFree;
 
 			x = i * tileWidth;
 			y = j * tileHeight;

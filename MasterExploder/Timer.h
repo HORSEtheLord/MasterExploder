@@ -5,17 +5,18 @@
 class Timer
 {
 private:
-	static std::shared_ptr<Timer> m_instance;
-
 	long long m_frequency, m_previousTime;
 
-public:
-	//MKOS: TODO private
 	Timer();
+public:
 	~Timer();
 
 	static bool Init();
-	static std::shared_ptr<Timer> GetInstance() { return m_instance; }
+	static Timer& GetInstance() 
+	{ 
+		static Timer instance;
+		return instance; 
+	}
 
 	double Tick();
 };
