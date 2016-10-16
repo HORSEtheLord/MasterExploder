@@ -10,6 +10,10 @@ Unit::Unit(int locationX, int locationY, int damage, unsigned int movementSpeed)
 	{
 		m_movementSpeed = MAX_MOVEMENT_SPEED;
 	}
+	if (m_movementSpeed == 0)
+	{
+		m_movementSpeed = 1;
+	}
 }
 
 Unit::Unit(int locationX, int locationY, int damage)
