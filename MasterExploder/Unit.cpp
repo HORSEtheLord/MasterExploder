@@ -12,6 +12,12 @@ Unit::Unit(int locationX, int locationY, int damage, unsigned int movementSpeed)
 	}
 }
 
+Unit::Unit(int locationX, int locationY, int damage)
+	: m_locationX(locationX), m_locationY(locationY), m_damage(damage)
+{
+		m_movementSpeed = 1;
+}
+
 Unit::~Unit()
 {
 	if (m_bmp)
@@ -75,7 +81,11 @@ void Unit::Update()
 	//MKOS: millisecondsPerMove -> movement speed
 	/*int millisecondsPerMove = 300;*/
 	int defaultMovementSpeed = 1000;
-	int millisecondsPerMove = defaultMovementSpeed - m_movementSpeed;
+	int millisecondsPerMove = defaultMovementSpeed / m_movementSpeed;
+	if (millisecondsPerMove < MS_PER_UPDATE)
+	{
+		millisecondsPerMove = MS_PER_UPDATE;
+	}
 
 	if (m_timeSinceLastMove >= millisecondsPerMove)
 	{
