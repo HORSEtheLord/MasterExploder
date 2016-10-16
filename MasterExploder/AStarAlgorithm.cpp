@@ -18,17 +18,17 @@ AStarAlgorithm::~AStarAlgorithm()
 {
 }
 
-bool AStarAlgorithm::Init(size_t width, size_t height, std::shared_ptr<std::vector<bool>> map)
+bool AStarAlgorithm::Init(size_t width, size_t height, std::shared_ptr<std::vector<bool>> collisionMap)
 {
 	GetInstance().m_width = width;
 	GetInstance().m_height = height;
-	GetInstance().m_map = map;
+	GetInstance().m_collisionMap = collisionMap;
 	return true;
 }
 
 bool AStarAlgorithm::IsNodeBlocked(int key) const
 {
-	return (*m_map)[key];
+	return (*m_collisionMap)[key];
 }
 
 std::vector<int> AStarAlgorithm::GetNeighbours(int node) const

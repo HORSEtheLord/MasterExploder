@@ -7,10 +7,12 @@
 class Building
 {
 private:
-	ID2D1Bitmap *m_bmp = nullptr;
 	int m_locationX, m_locationY;
 	unsigned int m_maxHitPoints, m_currentHitPoints;
 	bool m_isDestroyed = false;
+
+	ID2D1Bitmap *m_bmp = nullptr;
+	ID2D1Bitmap *m_bmpDestroyed = nullptr;
 public:
 	Building(int locationX, int locationY, int hp);
 	Building(const Building &other) = delete;

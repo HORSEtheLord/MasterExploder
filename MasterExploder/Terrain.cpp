@@ -9,32 +9,48 @@
 Terrain::Terrain(size_t terrainWidth, size_t terrainHeight, bool drawMesh)
 	: m_terrainWidth(terrainWidth), m_terrainHeight(terrainHeight), m_drawMesh(drawMesh)
 {
-	m_map = std::make_shared<std::vector<bool>>();
+	m_map = std::make_shared<std::vector<TerrainType>>();
 	m_map->reserve(terrainWidth * terrainHeight);
+
+	m_collisionMap = std::make_shared<std::vector<bool>>();
+	m_collisionMap->reserve(terrainWidth * terrainHeight);
 
 	std::default_random_engine engine(time(0));
 	std::uniform_int_distribution<unsigned> distribution(0, 4);
-	m_map->push_back(false);
+
+	m_map->push_back(TerrainType::Empty);
+	m_collisionMap->push_back(false);
+
+	bool empty;
+
 	for (int i = 1; i + 1 < terrainWidth * terrainHeight; ++i)
 	{
-		m_map->push_back(!distribution(engine));
+		empty = distribution(engine);
+
+		m_map->push_back(empty ? TerrainType::Empty : TerrainType::Rock);
+		m_collisionMap->push_back(!empty);
 	}
-	m_map->push_back(true);
+
+	m_map->push_back(TerrainType::Empty);
+	m_collisionMap->push_back(true);
 }
 
 Terrain::~Terrain()
 {
-	if (m_bmpFree)
-		m_bmpFree->Release();
-	if (m_bmpBlocked)
-		m_bmpBlocked->Release();
+	for (auto it = m_bitmaps.cbegin(); it != m_bitmaps.cend(); ++it)
+	{
+		if (*(it->second))
+			(*(it->second))->Release();
+	}
 }
 
 bool Terrain::Init(std::shared_ptr<Graphics> graphics)
 {
 	wchar_t *filenameFree = L"tile1.png";
 
-	if (!ImageLoader::LoadSprite(graphics, filenameFree, &m_bmpFree))
+	m_bitmaps[TerrainType::Empty] = new ID2D1Bitmap*;
+
+	if (!ImageLoader::LoadSprite(graphics, filenameFree, m_bitmaps[TerrainType::Empty]))
 	{
 		Logger::Log(L"Sprite loading failed. File: " + std::wstring(filenameFree));
 		return false;
@@ -42,7 +58,9 @@ bool Terrain::Init(std::shared_ptr<Graphics> graphics)
 
 	wchar_t *filenameBlocked = L"tile2.png";
 
-	if (!ImageLoader::LoadSprite(graphics, filenameBlocked, &m_bmpBlocked))
+	m_bitmaps[TerrainType::Rock] = new ID2D1Bitmap*;
+
+	if (!ImageLoader::LoadSprite(graphics, filenameBlocked, m_bitmaps[TerrainType::Rock]))
 	{
 		Logger::Log(L"Sprite loading failed. File: " + std::wstring(filenameBlocked));
 		return false;
@@ -50,7 +68,6 @@ bool Terrain::Init(std::shared_ptr<Graphics> graphics)
 
 	return true;
 }
-
 
 void Terrain::Draw(std::shared_ptr<Graphics> graphics) const
 {
@@ -68,7 +85,8 @@ void Terrain::Draw(std::shared_ptr<Graphics> graphics) const
 	{
 		for (int j = 0; j < m_terrainHeight; ++j)
 		{
-			bmp = (*m_map)[i * m_terrainHeight + j] ? m_bmpBlocked : m_bmpFree;
+			TerrainType terrainType = (*m_map)[i * m_terrainHeight + j];
+			bmp = *m_bitmaps.at(terrainType);
 
 			x = i * tileWidth;
 			y = j * tileHeight;

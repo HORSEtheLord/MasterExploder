@@ -7,7 +7,7 @@ class AStarAlgorithm
 {
 private:
 	size_t m_width = 0, m_height = 0;
-	std::shared_ptr<std::vector<bool>> m_map = nullptr;
+	std::shared_ptr<std::vector<bool>> m_collisionMap = nullptr;
 
 	bool IsNodeBlocked(int key) const;
 	std::vector<int> GetNeighbours(int node) const;
@@ -19,7 +19,7 @@ public:
 
 	void operator=(const AStarAlgorithm&) = delete;
 
-	static bool Init(size_t width, size_t height, std::shared_ptr<std::vector<bool>> map);
+	static bool Init(size_t width, size_t height, std::shared_ptr<std::vector<bool>> collisionMap);
 	static AStarAlgorithm& GetInstance()
 	{ 
 		static AStarAlgorithm instance;

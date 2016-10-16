@@ -152,7 +152,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		return -1;
 	}
 
-	if (!AStarAlgorithm::Init(TERRAIN_WIDTH, TERRAIN_HEIGHT, terrain->GetMap()))
+	if (!AStarAlgorithm::Init(TERRAIN_WIDTH, TERRAIN_HEIGHT, terrain->GetCollisionMap()))
 	{
 		Logger::Log(L"AStarAlgorithm initialization failed.");
 		unitialize();

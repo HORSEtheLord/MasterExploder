@@ -21,8 +21,6 @@ bool ImageLoader::LoadSprite(std::shared_ptr<Graphics> graphics, wchar_t *filena
 	IWICBitmapFrameDecode *wicFrame = nullptr;
 	IWICFormatConverter *wicConverter = nullptr;
 
-	//MKOS: musi byæ po ShowWindow (main)
-	//nie wiem dlaczego
 	res = CoCreateInstance(
 		CLSID_WICImagingFactory,
 		NULL,

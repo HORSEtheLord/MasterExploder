@@ -13,3 +13,12 @@
 #define CALCULATE_X(key) ((key) / TERRAIN_HEIGHT)
 #define CALCULATE_Y(key) ((key) % TERRAIN_HEIGHT)
 #define CALCULATE_KEY(x, y) ((x) * TERRAIN_HEIGHT + (y))
+
+struct EnumClassHash
+{
+	template <typename T>
+	std::size_t operator()(T t) const
+	{
+		return static_cast<std::size_t>(t);
+	}
+};
