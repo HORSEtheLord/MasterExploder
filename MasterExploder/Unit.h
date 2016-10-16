@@ -17,12 +17,12 @@ private:
 
 	int m_damage;
 	//zuka:
-	//max speed is one tile per tick (MAX_MOVEMENT_SPEED = 50 ms),
-	//default movement speed(equal to 0) is 1 tile per second
-	//ma byc ilosc kratek/sekunde
+	//max speed is one tile per tick (MAX_MOVEMENT_SPEED = 20 tiles/sec),
+	//default movement speed is 1 tile per second
 	unsigned int m_movementSpeed;
 public:
 	Unit(int locationX, int locationY, int damage, unsigned int movementSpeed);
+	Unit(int locationX, int locationY, int damage);
 	Unit(const Unit &other) = delete;
 	~Unit();
 
