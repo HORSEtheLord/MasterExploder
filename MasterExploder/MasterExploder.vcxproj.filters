@@ -72,6 +72,9 @@
     <ClCompile Include="Unit.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Terrain.h">
@@ -101,6 +104,9 @@
     <ClInclude Include="AStarAlgorithm.h">
       <Filter>Header Files\Logic\AI</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="tile1.png">
@@ -113,6 +119,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="building1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="building1_destroyed.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

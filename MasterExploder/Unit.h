@@ -2,13 +2,12 @@
 
 #include <d2d1.h>
 #include <memory>
-#include <wincodec.h>
 
 #include "AStarAlgorithm.h"
 #include "Building.h"
 #include "Graphics.h"
 
-class Unit
+class Unit : public GameObject
 {
 private:
 	ID2D1Bitmap *m_bmp = nullptr;
@@ -26,13 +25,13 @@ private:
 public:
 	Unit(int locationX, int locationY, int damage, unsigned int movementSpeed = 1, unsigned int attackSpeed = 1);
 	Unit(const Unit &other) = delete;
-	~Unit();
+	virtual ~Unit();
 
 	void operator = (const Unit&) = delete;
 
-	bool Init(std::shared_ptr<Graphics> graphics);
-	void Update();
-	void Draw(std::shared_ptr<Graphics> graphics) const;
+	bool Init(std::shared_ptr<Graphics> graphics) override;
+	void Update() override;
+	void Draw(std::shared_ptr<Graphics> graphics) const override;
 
 	void Move(int locationX, int locationY);
 	void Attack(std::shared_ptr<Building> attackTarget);
