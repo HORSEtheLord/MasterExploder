@@ -13,6 +13,8 @@ public:
 	Graphics(const Graphics &other) = delete;
 	~Graphics();
 
+	void operator=(const Graphics&) = delete;
+
 	bool Init(HWND windowHandle);
 
 	ID2D1RenderTarget *GetRenderTarget() const

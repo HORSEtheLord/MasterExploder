@@ -25,6 +25,8 @@ public:
 	Unit(const Unit &other) = delete;
 	~Unit();
 
+	void operator = (const Unit&) = delete;
+
 	bool Init(std::shared_ptr<Graphics> graphics);
 	void Update();
 	void Draw(std::shared_ptr<Graphics> graphics) const;

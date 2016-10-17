@@ -15,11 +15,6 @@ Timer::~Timer()
 {
 }
 
-bool Timer::Init()
-{
-	GetInstance();
-	return true;
-}
 
 double Timer::Tick()
 {

@@ -15,6 +15,7 @@ std::shared_ptr<Graphics> graphics;
 std::shared_ptr<Terrain> terrain;
 std::shared_ptr<Unit> unit;
 std::shared_ptr<Building> building;
+std::shared_ptr<Timer> timer;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -100,6 +101,7 @@ void unitialize()
 	terrain = nullptr;
 	graphics = nullptr;
 	building = nullptr;
+	timer = nullptr;
 
 	CoUninitialize();
 }
@@ -170,12 +172,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 
 	ShowWindow(windowHandle, nCmdShow);
 
-	if (!Timer::Init())
-	{
-		Logger::Log(L"Timer initialization failed.");
-		unitialize();
-		return -1;
-	}
+	timer = std::make_shared<Timer>();
 
 	double lag = 0.0;
 
@@ -189,7 +186,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		}
 		else
 		{
-			lag += Timer::GetInstance().Tick();
+			lag += timer->Tick();
 
 			while (lag >= MS_PER_UPDATE)
 			{

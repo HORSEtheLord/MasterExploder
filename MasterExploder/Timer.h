@@ -7,16 +7,12 @@ class Timer
 private:
 	long long m_frequency, m_previousTime;
 
-	Timer();
 public:
+	Timer();
+	Timer(const Timer&) = delete;
 	~Timer();
 
-	static bool Init();
-	static Timer& GetInstance() 
-	{ 
-		static Timer instance;
-		return instance; 
-	}
+	void operator=(const Timer&) = delete;
 
 	double Tick();
 };

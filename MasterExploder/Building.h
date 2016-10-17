@@ -18,6 +18,8 @@ public:
 	Building(const Building &other) = delete;
 	~Building();
 
+	void operator=(const Building &other) = delete;
+
 	bool ReceiveDamage(int damage);
 
 	bool Init(std::shared_ptr<Graphics> graphics);

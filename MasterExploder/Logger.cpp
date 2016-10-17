@@ -7,10 +7,20 @@
 
 #include "Logger.h"
 
-void Logger::Log(const std::wstring &message)
+Logger::Logger()
+{
+}
+
+Logger::~Logger()
+{
+}
+
+
+
+void Logger::Log(const std::wstring &message, const std::wstring &filename)
 {
 	std::wofstream logFile;
-	logFile.open("logFile.txt", std::ios_base::app);
+	logFile.open(filename, std::ios_base::app);
 
 	auto t = std::time(nullptr);
 	struct tm timeinfo;
@@ -21,9 +31,9 @@ void Logger::Log(const std::wstring &message)
 	logFile.close();
 }
 
-void Logger::Clear()
+void Logger::Clear(const std::wstring &filename)
 {
 	std::ofstream ofs;
-	ofs.open("logFile.txt", std::ofstream::out | std::ofstream::trunc);
+	ofs.open(filename, std::ofstream::out | std::ofstream::trunc);
 	ofs.close();
 }

@@ -5,9 +5,21 @@
 
 class Logger
 {
-public:
-	static void Log(const std::wstring &message);
-	static void Clear();
 private:
-	Logger() { }
+	Logger();
+
+public:
+	Logger(const Logger&) = delete;
+	~Logger();
+
+	void operator=(const Logger&) = delete;
+
+	static Logger& GetInstance()
+	{
+		static Logger instance;
+		return instance;
+	}
+
+	static void Log(const std::wstring &message, const std::wstring &filename = L"logFile.txt");
+	static void Clear(const std::wstring &filename = L"logFile.txt");
 };

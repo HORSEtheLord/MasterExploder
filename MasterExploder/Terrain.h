@@ -31,6 +31,8 @@ public:
 	Terrain(const Terrain &other) = delete;
 	~Terrain();
 
+	void operator=(const Terrain &other) = delete;
+
 	std::shared_ptr<std::vector<bool>> GetCollisionMap() const { return m_collisionMap; }
 
 	bool Init(std::shared_ptr<Graphics> graphics);
