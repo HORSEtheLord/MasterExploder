@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <Windowsx.h>
 
+#include "GameObject.h"
 #include "Graphics.h"
 #include "Logger.h"
 #include "Terrain.h"
@@ -12,6 +13,7 @@
 #include "Building.h"
 #include "EnemyUnit.h"
 
+std::vector<std::shared_ptr<GameObject>> gameObjects;
 std::shared_ptr<Graphics> graphics;
 std::shared_ptr<Terrain> terrain;
 std::shared_ptr<Unit> unit;
@@ -102,8 +104,40 @@ HWND createWindow(HINSTANCE hInstance)
 	return windowHandle;
 }
 
+bool initGameObjects()
+{
+	for (auto it = gameObjects.cbegin(); it != gameObjects.cend(); ++it)
+	{
+		if (!(*it)->Init(graphics))
+		{
+			Logger::Log((*it)->GetName() + L" initialization failed.");
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void updateGameObjects()
+{
+	for (auto it = gameObjects.cbegin(); it != gameObjects.cend(); ++it)
+	{
+		(*it)->Update();
+	}
+}
+
+void drawGameObjects()
+{
+	for (auto it = gameObjects.cbegin(); it != gameObjects.cend(); ++it)
+	{
+		(*it)->Draw(graphics);
+	}
+}
+
 void unitialize()
 {
+	gameObjects.clear();
+
 	unit = nullptr;
 	terrain = nullptr;
 	graphics = nullptr;
@@ -145,19 +179,17 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 	}
 
 	terrain = std::make_shared<Terrain>(TERRAIN_WIDTH, TERRAIN_HEIGHT, true);
+	gameObjects.push_back(terrain);
 
-	if (!terrain->Init(graphics))
-	{
-		Logger::Log(L"Terrain initialization failed.");
-		unitialize();
-		return -1;
-	}
+	building = std::make_shared<Building>(39, 29, 300);
+	gameObjects.push_back(building);
 
 	unit = std::make_shared<Unit>(0, 0, 40, 20, 10);
+	gameObjects.push_back(unit);
 
-	if (!unit->Init(graphics))
+	if(!initGameObjects())
 	{
-		Logger::Log(L"Unit initialization failed.");
+		Logger::Log(L"GameObjects initialization failed.");
 		unitialize();
 		return -1;
 	}
@@ -165,15 +197,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 	if (!AStarAlgorithm::Init(TERRAIN_WIDTH, TERRAIN_HEIGHT, terrain->GetCollisionMap()))
 	{
 		Logger::Log(L"AStarAlgorithm initialization failed.");
-		unitialize();
-		return -1;
-	}
-
-	building = std::make_shared<Building>(39, 29, 300);
-
-	if (!building->Init(graphics))
-	{
-		Logger::Log(L"Building initialization failed.");
 		unitialize();
 		return -1;
 	}
@@ -207,14 +230,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 
 			while (lag >= MS_PER_UPDATE)
 			{
-				unit->Update();
+				updateGameObjects();
 				lag -= MS_PER_UPDATE;
 			}
 
 			graphics->BeginDraw();
-			terrain->Draw(graphics);
-			building->Draw(graphics);
-			unit->Draw(graphics);
+			drawGameObjects();
 			enemyUnit->Draw(graphics);
 			graphics->EndDraw();
 		}

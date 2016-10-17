@@ -7,7 +7,7 @@
 #include "ImageLoader.h"
 
 Terrain::Terrain(size_t terrainWidth, size_t terrainHeight, bool drawMesh)
-	: m_terrainWidth(terrainWidth), m_terrainHeight(terrainHeight), m_drawMesh(drawMesh)
+	: GameObject(L"Terrain"), m_terrainWidth(terrainWidth), m_terrainHeight(terrainHeight), m_drawMesh(drawMesh)
 {
 	m_map = std::make_shared<std::vector<TerrainType>>();
 	m_map->reserve(terrainWidth * terrainHeight);
@@ -69,6 +69,10 @@ bool Terrain::Init(std::shared_ptr<Graphics> graphics)
 	}
 
 	return true;
+}
+
+void Terrain::Update()
+{
 }
 
 void Terrain::Draw(std::shared_ptr<Graphics> graphics) const

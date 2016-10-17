@@ -2,9 +2,10 @@
 #include <d2d1.h>
 #include <memory>
 
+#include "GameObject.h"
 #include "Graphics.h"
 
-class Building
+class Building : public GameObject
 {
 private:
 	int m_locationX, m_locationY;
@@ -14,16 +15,17 @@ private:
 	ID2D1Bitmap *m_bmp = nullptr;
 	ID2D1Bitmap *m_bmpDestroyed = nullptr;
 public:
-	Building(int locationX, int locationY, int hp);
+	Building(int locationX, int locationY, unsigned int hp);
 	Building(const Building &other) = delete;
-	~Building();
+	virtual ~Building();
 
 	void operator=(const Building &other) = delete;
 
 	bool ReceiveDamage(int damage);
 
-	bool Init(std::shared_ptr<Graphics> graphics);
-	void Draw(std::shared_ptr<Graphics> graphics) const;
+	bool Init(std::shared_ptr<Graphics> graphics) override;
+	void Update() override;
+	void Draw(std::shared_ptr<Graphics> graphics) const override;
 
 	int GetLocationX() const { return m_locationX; }
 	int GetLocationY() const { return m_locationY; }

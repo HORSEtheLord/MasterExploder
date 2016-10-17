@@ -4,7 +4,7 @@
 #include "ImageLoader.h"
 
 Unit::Unit(int locationX, int locationY, int damage, unsigned int movementSpeed, unsigned int attackSpeed)
-	: m_locationX(locationX), m_locationY(locationY), m_damage(damage), m_movementSpeed(movementSpeed), m_attackSpeed(attackSpeed)
+	: GameObject(L"Unit"), m_locationX(locationX), m_locationY(locationY), m_damage(damage), m_movementSpeed(movementSpeed), m_attackSpeed(attackSpeed)
 {
 	if (m_movementSpeed > MAX_MOVEMENT_SPEED)
 	{

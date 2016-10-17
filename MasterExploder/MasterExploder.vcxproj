@@ -123,6 +123,7 @@
     <ClCompile Include="AStarAlgorithm.cpp" />
     <ClCompile Include="Building.cpp" />
     <ClCompile Include="EnemyUnit.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="AStarAlgorithm.h" />
     <ClInclude Include="Building.h" />
     <ClInclude Include="EnemyUnit.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="Logger.h" />
@@ -147,6 +149,7 @@
     <Image Include="building1.png" />
     <Image Include="enemy_unit1.png" />
     <Image Include="enemy_unit1_dead.png" />
+    <Image Include="building1_destroyed.png" />
     <Image Include="tile1.png" />
     <Image Include="tile2.png" />
     <Image Include="unit1.png" />

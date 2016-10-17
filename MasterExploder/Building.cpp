@@ -3,8 +3,8 @@
 #include "Logger.h"
 #include "Utils.h"
 
-Building::Building(int locationX, int locationY, int hp)
-	: m_locationX(locationX), m_locationY(locationY), m_maxHitPoints(hp), m_currentHitPoints(hp)
+Building::Building(int locationX, int locationY, unsigned int hp)
+	: GameObject(L"Building"), m_locationX(locationX), m_locationY(locationY), m_maxHitPoints(hp), m_currentHitPoints(hp)
 {
 }
 
@@ -12,6 +12,8 @@ Building::~Building()
 {
 	if (m_bmp)
 		m_bmp->Release();
+	if (m_bmpDestroyed)
+		m_bmpDestroyed->Release();
 }
 
 bool Building::ReceiveDamage(int damage)
@@ -48,6 +50,10 @@ bool Building::Init(std::shared_ptr<Graphics> graphics)
 	}
 
 	return true;
+}
+
+void Building::Update()
+{
 }
 
 void Building::Draw(std::shared_ptr<Graphics> graphics) const

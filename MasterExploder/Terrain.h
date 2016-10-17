@@ -4,12 +4,12 @@
 #include <memory>
 #include <unordered_map>
 #include <vector>
-#include <wincodec.h>
 
+#include "GameObject.h"
 #include "Graphics.h"
 #include "Utils.h"
 
-class Terrain
+class Terrain : public GameObject
 {
 public:
 	enum class TerrainType
@@ -29,12 +29,13 @@ private:
 public:
 	Terrain(size_t terrainWidth, size_t terrainHeight, bool drawMesh = false);
 	Terrain(const Terrain &other) = delete;
-	~Terrain();
+	virtual ~Terrain();
 
 	void operator=(const Terrain &other) = delete;
 
 	std::shared_ptr<std::vector<bool>> GetCollisionMap() const { return m_collisionMap; }
 
-	bool Init(std::shared_ptr<Graphics> graphics);
-	void Draw(std::shared_ptr<Graphics> graphics) const;
+	bool Init(std::shared_ptr<Graphics> graphics) override;
+	void Update() override;
+	void Draw(std::shared_ptr<Graphics> graphics) const override;
 };
