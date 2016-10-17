@@ -10,12 +10,14 @@
 #include "Utils.h"
 #include "Timer.h"
 #include "Building.h"
+#include "EnemyUnit.h"
 
 std::shared_ptr<Graphics> graphics;
 std::shared_ptr<Terrain> terrain;
 std::shared_ptr<Unit> unit;
 std::shared_ptr<Building> building;
 std::shared_ptr<Timer> timer;
+std::shared_ptr<EnemyUnit> enemyUnit;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -63,9 +65,14 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			int newX = xPos / TILE_WIDTH;
 			int newY = yPos / TILE_HEIGHT;
 
-			if (building && building->GetLocationX() == newX && building->GetLocationY() == newY)
+			/*if (building && building->GetLocationX() == newX && building->GetLocationY() == newY)
 			{
 				unit->Attack(building);
+			}*/
+			/*else */
+			if (enemyUnit && enemyUnit->GetLocationX() == newX && enemyUnit->GetLocationY() == newY)
+			{
+				unit->Attack(enemyUnit);
 			}
 		}
 	}
@@ -102,6 +109,7 @@ void unitialize()
 	graphics = nullptr;
 	building = nullptr;
 	timer = nullptr;
+	enemyUnit = nullptr;
 
 	CoUninitialize();
 }
@@ -170,6 +178,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		return -1;
 	}
 
+	enemyUnit = std::make_shared<EnemyUnit>(39, 28, 300);
+
+	if (!enemyUnit->Init(graphics))
+	{
+		Logger::Log(L"EnemyUnit initialization failed.");
+		unitialize();
+		return -1;
+	}
+
 	ShowWindow(windowHandle, nCmdShow);
 
 	timer = std::make_shared<Timer>();
@@ -198,6 +215,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 			terrain->Draw(graphics);
 			building->Draw(graphics);
 			unit->Draw(graphics);
+			enemyUnit->Draw(graphics);
 			graphics->EndDraw();
 		}
 	}

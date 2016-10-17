@@ -76,7 +76,23 @@ void Unit::Move(int locationX, int locationY)
 		m_path = path;
 }
 
-void Unit::Attack(std::shared_ptr<Building> attackTarget)
+//void Unit::Attack(std::shared_ptr<Building> attackTarget)
+//{
+//	m_attackTarget = nullptr;
+//
+//	std::vector<int> path = AStarAlgorithm::GetInstance().FindPath(
+//		CALCULATE_KEY(m_locationX, m_locationY),
+//		CALCULATE_KEY(attackTarget->GetLocationX(), attackTarget->GetLocationY()),
+//		false);
+//
+//	if (!path.empty())
+//	{
+//		m_path = path;
+//		m_attackTarget = attackTarget;
+//	}
+//}
+
+void Unit::Attack(std::shared_ptr<EnemyUnit> attackTarget)
 {
 	m_attackTarget = nullptr;
 

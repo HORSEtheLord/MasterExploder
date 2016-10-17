@@ -23,7 +23,7 @@ Terrain::Terrain(size_t terrainWidth, size_t terrainHeight, bool drawMesh)
 
 	bool empty;
 
-	for (int i = 1; i + 1 < terrainWidth * terrainHeight; ++i)
+	for (int i = 1; i + 2 < terrainWidth * terrainHeight; ++i)
 	{
 		empty = distribution(engine);
 
@@ -32,6 +32,8 @@ Terrain::Terrain(size_t terrainWidth, size_t terrainHeight, bool drawMesh)
 	}
 
 	m_map->push_back(TerrainType::Empty);
+	m_map->push_back(TerrainType::Empty);
+	m_collisionMap->push_back(true);
 	m_collisionMap->push_back(true);
 }
 
