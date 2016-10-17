@@ -64,7 +64,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			if (building && building->GetLocationX() == newX && building->GetLocationY() == newY)
 			{
-				unit->Attack(newX, newY);
+				unit->Attack(building);
 			}
 		}
 	}
@@ -143,7 +143,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		return -1;
 	}
 
-	unit = std::make_shared<Unit>(0, 0, 40, 20);
+	unit = std::make_shared<Unit>(0, 0, 40, 20, 10);
 
 	if (!unit->Init(graphics))
 	{
@@ -159,7 +159,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		return -1;
 	}
 
-	building = std::make_shared<Building>(39, 29, 100);
+	building = std::make_shared<Building>(39, 29, 300);
 
 	if (!building->Init(graphics))
 	{

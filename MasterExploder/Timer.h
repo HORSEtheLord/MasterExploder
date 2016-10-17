@@ -12,7 +12,7 @@ public:
 	~Timer();
 
 	static bool Init();
-	static Timer& GetInstance() 
+	static Timer& GetInstance()
 	{ 
 		static Timer instance;
 		return instance; 
