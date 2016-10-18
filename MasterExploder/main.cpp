@@ -67,11 +67,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			int newX = xPos / TILE_WIDTH;
 			int newY = yPos / TILE_HEIGHT;
 
-			/*if (building && building->GetLocationX() == newX && building->GetLocationY() == newY)
+			if (building && building->GetLocationX() == newX && building->GetLocationY() == newY)
 			{
 				unit->Attack(building);
-			}*/
-			/*else */
+			}
+			else 
 			if (enemyUnit && enemyUnit->GetLocationX() == newX && enemyUnit->GetLocationY() == newY)
 			{
 				unit->Attack(enemyUnit);

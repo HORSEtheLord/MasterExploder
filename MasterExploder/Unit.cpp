@@ -92,7 +92,7 @@ void Unit::Move(int locationX, int locationY)
 //	}
 //}
 
-void Unit::Attack(std::shared_ptr<EnemyUnit> attackTarget)
+void Unit::Attack(std::shared_ptr<AttackableGameObject> attackTarget)
 {
 	m_attackTarget = nullptr;
 

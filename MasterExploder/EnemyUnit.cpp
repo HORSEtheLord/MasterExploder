@@ -4,7 +4,7 @@
 #include "ImageLoader.h"
 
 EnemyUnit::EnemyUnit(int locationX, int locationY, unsigned int hp)
-	: GameObject(L"EnemyUnit"), m_locationX(locationX), m_locationY(locationY), m_maxHitPoints(hp), m_currentHitPoints(hp)
+	: AttackableGameObject(L"EnemyUnit", hp, hp), m_locationX(locationX), m_locationY(locationY)
 {
 }
 
@@ -18,14 +18,14 @@ EnemyUnit::~EnemyUnit()
 
 bool EnemyUnit::ReceiveDamage(int damage)
 {
-	if (damage >= m_currentHitPoints)
+	if (damage >= GetCurrentHp())
 	{
-		m_currentHitPoints = 0;
+		SetCurrentHp(0);
 		m_isDead = true;
 	}
 	else
 	{
-		m_currentHitPoints -= damage;
+		SetCurrentHp(GetCurrentHp() - damage);
 	}
 
 	return m_isDead;

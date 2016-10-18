@@ -121,6 +121,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AStarAlgorithm.cpp" />
+    <ClCompile Include="AttackableGameObject.cpp" />
     <ClCompile Include="Building.cpp" />
     <ClCompile Include="EnemyUnit.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -134,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AStarAlgorithm.h" />
+    <ClInclude Include="AttackableGameObject.h" />
     <ClInclude Include="Building.h" />
     <ClInclude Include="EnemyUnit.h" />
     <ClInclude Include="GameObject.h" />

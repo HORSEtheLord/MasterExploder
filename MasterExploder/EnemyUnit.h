@@ -6,13 +6,12 @@
 
 #include "Building.h"
 #include "Graphics.h"
-#include "GameObject.h"
+#include "AttackableGameObject.h"
 
-class EnemyUnit : public GameObject
+class EnemyUnit : public AttackableGameObject
 {
 private:
 	int m_locationX, m_locationY;
-	unsigned int m_maxHitPoints, m_currentHitPoints;
 	bool m_isDead = false;
 
 	ID2D1Bitmap *m_bmp = nullptr;
@@ -24,12 +23,12 @@ public:
 
 	void operator=(const EnemyUnit &other) = delete;
 
-	bool ReceiveDamage(int damage);
+	bool ReceiveDamage(int damage) override;
 
 	bool Init(std::shared_ptr<Graphics> graphics) override;
 	void Update() override;
 	void Draw(std::shared_ptr<Graphics> graphics) const override;
 
-	int GetLocationX() const { return m_locationX; }
-	int GetLocationY() const { return m_locationY; }
+	int GetLocationX() const override { return m_locationX; }
+	int GetLocationY() const override { return m_locationY; }
 };

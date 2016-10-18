@@ -73,9 +73,12 @@
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="EnemyUnit.cpp">
-		<Filter>Source Files\GameObjects</Filter>
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="AttackableGameObject.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -108,9 +111,12 @@
       <Filter>Header Files\Logic\AI</Filter>
     </ClInclude>
     <ClInclude Include="EnemyUnit.h">
-	  <Filter>Header Files\GameObjects</Filter>
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="AttackableGameObject.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
@@ -131,7 +137,7 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="enemy_unit1_dead.png">
-	  <Filter>Resource Files</Filter>
+      <Filter>Resource Files</Filter>
     </Image>
     <Image Include="building1_destroyed.png">
       <Filter>Resource Files</Filter>

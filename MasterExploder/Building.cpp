@@ -4,7 +4,7 @@
 #include "Utils.h"
 
 Building::Building(int locationX, int locationY, unsigned int hp)
-	: GameObject(L"Building"), m_locationX(locationX), m_locationY(locationY), m_maxHitPoints(hp), m_currentHitPoints(hp)
+	: AttackableGameObject(L"Building", hp, hp), m_locationX(locationX), m_locationY(locationY)
 {
 }
 
@@ -18,14 +18,18 @@ Building::~Building()
 
 bool Building::ReceiveDamage(int damage)
 {
-	if (damage >= m_currentHitPoints)
+	if (damage >= GetCurrentHp())
 	{
-		m_currentHitPoints = 0;
+		SetCurrentHp(0);
 		m_isDestroyed = true;
 	}
 	else
 	{
-		m_currentHitPoints -= damage;
+		//zuka:
+		//zapytac matiego jak lepiej
+		unsigned int currentHp = GetCurrentHp();
+		SetCurrentHp(currentHp - damage);
+		//SetCurrentHp(GetCurrentHp() - damage);
 	}
 
 	return m_isDestroyed;
