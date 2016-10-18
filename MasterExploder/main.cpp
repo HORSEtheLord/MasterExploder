@@ -187,6 +187,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 	unit = std::make_shared<Unit>(0, 0, 40, 20, 10);
 	gameObjects.push_back(unit);
 
+	enemyUnit = std::make_shared<EnemyUnit>(39, 28, 300);
+	gameObjects.push_back(enemyUnit);
+
 	if(!initGameObjects())
 	{
 		Logger::Log(L"GameObjects initialization failed.");
@@ -197,15 +200,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 	if (!AStarAlgorithm::Init(TERRAIN_WIDTH, TERRAIN_HEIGHT, terrain->GetCollisionMap()))
 	{
 		Logger::Log(L"AStarAlgorithm initialization failed.");
-		unitialize();
-		return -1;
-	}
-
-	enemyUnit = std::make_shared<EnemyUnit>(39, 28, 300);
-
-	if (!enemyUnit->Init(graphics))
-	{
-		Logger::Log(L"EnemyUnit initialization failed.");
 		unitialize();
 		return -1;
 	}
@@ -236,7 +230,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 
 			graphics->BeginDraw();
 			drawGameObjects();
-			enemyUnit->Draw(graphics);
 			graphics->EndDraw();
 		}
 	}

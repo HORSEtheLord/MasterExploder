@@ -6,8 +6,9 @@
 
 #include "Building.h"
 #include "Graphics.h"
+#include "GameObject.h"
 
-class EnemyUnit
+class EnemyUnit : public GameObject
 {
 private:
 	int m_locationX, m_locationY;
@@ -19,14 +20,15 @@ private:
 public:
 	EnemyUnit(int locationX, int locationY, unsigned int hp);
 	EnemyUnit(const EnemyUnit &other) = delete;
-	~EnemyUnit();
+	virtual ~EnemyUnit();
 
 	void operator=(const EnemyUnit &other) = delete;
 
 	bool ReceiveDamage(int damage);
 
-	bool Init(std::shared_ptr<Graphics> graphics);
-	void Draw(std::shared_ptr<Graphics> graphics) const;
+	bool Init(std::shared_ptr<Graphics> graphics) override;
+	void Update() override;
+	void Draw(std::shared_ptr<Graphics> graphics) const override;
 
 	int GetLocationX() const { return m_locationX; }
 	int GetLocationY() const { return m_locationY; }

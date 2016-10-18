@@ -4,9 +4,8 @@
 #include "ImageLoader.h"
 
 EnemyUnit::EnemyUnit(int locationX, int locationY, unsigned int hp)
-	: m_locationX(locationX), m_locationY(locationY), m_maxHitPoints(hp), m_currentHitPoints(hp)
+	: GameObject(L"EnemyUnit"), m_locationX(locationX), m_locationY(locationY), m_maxHitPoints(hp), m_currentHitPoints(hp)
 {
-
 }
 
 EnemyUnit::~EnemyUnit()
@@ -51,6 +50,10 @@ bool EnemyUnit::Init(std::shared_ptr<Graphics> graphics)
 	}
 
 	return true;
+}
+
+void EnemyUnit::Update()
+{
 }
 
 void EnemyUnit::Draw(std::shared_ptr<Graphics> graphics) const
