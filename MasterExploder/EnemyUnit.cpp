@@ -4,7 +4,7 @@
 #include "ImageLoader.h"
 
 EnemyUnit::EnemyUnit(int locationX, int locationY, unsigned int hp)
-	: AttackableGameObject(L"EnemyUnit", hp, hp), m_locationX(locationX), m_locationY(locationY)
+	: AttackableGameObject(L"EnemyUnit", locationX, locationY, hp, hp)
 {
 }
 

@@ -9,6 +9,7 @@
 
 #include "AStarAlgorithm.h"
 #include "Utils.h"
+#include "CollisionChecker.h"
 
 AStarAlgorithm::AStarAlgorithm()
 {
@@ -18,11 +19,10 @@ AStarAlgorithm::~AStarAlgorithm()
 {
 }
 
-bool AStarAlgorithm::Init(size_t width, size_t height, std::shared_ptr<std::vector<bool>> collisionMap)
+bool AStarAlgorithm::Init(size_t width, size_t height)
 {
 	GetInstance().m_width = width;
 	GetInstance().m_height = height;
-	GetInstance().m_collisionMap = collisionMap;
 	return true;
 }
 
@@ -82,8 +82,10 @@ float AStarAlgorithm::GetEstimatedDistance(int from, int to) const
 	return estimatedDistance;
 }
 
-std::vector<int> AStarAlgorithm::FindPath(int start, int goal, bool includeGoalInPath) const
+std::vector<int> AStarAlgorithm::FindPath(int start, int goal, bool includeGoalInPath)
 {
+	m_collisionMap = CollisionChecker::GetInstance().GetCollisionMap();
+
 	std::unordered_set<int> goalNodes;
 
 	if (includeGoalInPath)

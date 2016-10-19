@@ -1,7 +1,7 @@
 #include "AttackableGameObject.h"
 
-AttackableGameObject::AttackableGameObject(const std::wstring& name, unsigned int maxHitPoints, unsigned int currentHitPoints)
-	: GameObject(name),  m_maxHitPoints(maxHitPoints), m_currentHitPoints(currentHitPoints)
+AttackableGameObject::AttackableGameObject(const std::wstring& name, int locationX, int locationY, unsigned int maxHitPoints, unsigned int currentHitPoints)
+	: GameObject(name, locationX, locationY),  m_maxHitPoints(maxHitPoints), m_currentHitPoints(currentHitPoints)
 {
 }
 

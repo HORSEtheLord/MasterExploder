@@ -19,12 +19,12 @@ public:
 
 	void operator=(const AStarAlgorithm&) = delete;
 
-	static bool Init(size_t width, size_t height, std::shared_ptr<std::vector<bool>> collisionMap);
+	static bool Init(size_t width, size_t height);
 	static AStarAlgorithm& GetInstance()
 	{ 
 		static AStarAlgorithm instance;
 		return instance; 
 	}
 
-	std::vector<int> FindPath(int start, int goal, bool includeGoalInPath = true) const;
+	std::vector<int> FindPath(int start, int goal, bool includeGoalInPath = true);
 };
