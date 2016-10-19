@@ -16,25 +16,6 @@ Building::~Building()
 		m_bmpDestroyed->Release();
 }
 
-bool Building::ReceiveDamage(int damage)
-{
-	if (damage >= GetCurrentHp())
-	{
-		SetCurrentHp(0);
-		m_isDestroyed = true;
-	}
-	else
-	{
-		//zuka:
-		//zapytac matiego jak lepiej
-		unsigned int currentHp = GetCurrentHp();
-		SetCurrentHp(currentHp - damage);
-		//SetCurrentHp(GetCurrentHp() - damage);
-	}
-
-	return m_isDestroyed;
-}
-
 bool Building::Init(std::shared_ptr<Graphics> graphics)
 {
 	wchar_t *filename = L"building1.png";
@@ -68,7 +49,7 @@ void Building::Draw(std::shared_ptr<Graphics> graphics) const
 	int locationX = m_locationX * width;
 	int locationY = m_locationY * height;
 
-	ID2D1Bitmap *bmp = m_isDestroyed ? m_bmpDestroyed : m_bmp;
+	ID2D1Bitmap *bmp = m_isDead ? m_bmpDestroyed : m_bmp;
 
 	graphics->GetRenderTarget()->DrawBitmap(
 		bmp,

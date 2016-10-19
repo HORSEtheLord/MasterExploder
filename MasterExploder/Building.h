@@ -2,15 +2,12 @@
 #include <d2d1.h>
 #include <memory>
 
-#include "GameObject.h"
 #include "Graphics.h"
 #include "AttackableGameObject.h"
 
 class Building : public AttackableGameObject
 {
 private:
-	bool m_isDestroyed = false;
-
 	ID2D1Bitmap *m_bmp = nullptr;
 	ID2D1Bitmap *m_bmpDestroyed = nullptr;
 public:
@@ -19,8 +16,6 @@ public:
 	virtual ~Building();
 
 	void operator=(const Building &other) = delete;
-
-	bool ReceiveDamage(int damage) override;
 
 	bool Init(std::shared_ptr<Graphics> graphics) override;
 	void Update() override;

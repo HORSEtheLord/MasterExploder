@@ -16,21 +16,6 @@ EnemyUnit::~EnemyUnit()
 		m_bmpDead->Release();
 }
 
-bool EnemyUnit::ReceiveDamage(int damage)
-{
-	if (damage >= GetCurrentHp())
-	{
-		SetCurrentHp(0);
-		m_isDead = true;
-	}
-	else
-	{
-		SetCurrentHp(GetCurrentHp() - damage);
-	}
-
-	return m_isDead;
-}
-
 bool EnemyUnit::Init(std::shared_ptr<Graphics> graphics)
 {
 	wchar_t *filename = L"enemy_unit1.png";

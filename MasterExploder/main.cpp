@@ -60,8 +60,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			{
 				unit->Attack(building);
 			}
-			else 
-			if (enemyUnit && enemyUnit->GetLocationX() == newX && enemyUnit->GetLocationY() == newY)
+			else if (enemyUnit && enemyUnit->GetLocationX() == newX && enemyUnit->GetLocationY() == newY)
 			{
 				unit->Attack(enemyUnit);
 			}

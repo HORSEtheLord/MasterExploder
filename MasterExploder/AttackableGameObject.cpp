@@ -5,7 +5,17 @@ AttackableGameObject::AttackableGameObject(const std::wstring& name, int locatio
 {
 }
 
-void AttackableGameObject::SetCurrentHp(unsigned int hp)
+bool AttackableGameObject::ReceiveDamage(int damage)
 {
-	m_currentHitPoints = hp;
+	if (damage >= GetCurrentHp())
+	{
+		m_currentHitPoints = 0;
+		m_isDead = true;
+	}
+	else
+	{
+		m_currentHitPoints -= damage;
+	}
+
+	return m_isDead;
 }

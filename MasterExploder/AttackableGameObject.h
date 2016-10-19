@@ -8,18 +8,18 @@
 class AttackableGameObject : public GameObject
 {
 private:
-	unsigned int m_maxHitPoints, m_currentHitPoints;
 
 protected:
+	unsigned int m_maxHitPoints, m_currentHitPoints;
+	bool m_isDead = false;
+
 	AttackableGameObject(const std::wstring &name, int locationX, int locationY, unsigned int maxHitPoints, unsigned int currentHitPoints);
 
 public:
 	virtual ~AttackableGameObject() {}
 
-	virtual bool ReceiveDamage(int damage) = 0;
+	bool ReceiveDamage(int damage);
 
 	const unsigned int& GetMaxHp() const { return m_maxHitPoints; }
 	const unsigned int& GetCurrentHp() const { return m_currentHitPoints; }
-
-	void SetCurrentHp(unsigned int hp);
 };

@@ -4,15 +4,12 @@
 #include <memory>
 #include <wincodec.h>
 
-#include "Building.h"
 #include "Graphics.h"
 #include "AttackableGameObject.h"
 
 class EnemyUnit : public AttackableGameObject
 {
 private:
-	bool m_isDead = false;
-
 	ID2D1Bitmap *m_bmp = nullptr;
 	ID2D1Bitmap *m_bmpDead = nullptr;
 public:
@@ -21,8 +18,6 @@ public:
 	virtual ~EnemyUnit();
 
 	void operator=(const EnemyUnit &other) = delete;
-
-	bool ReceiveDamage(int damage) override;
 
 	bool Init(std::shared_ptr<Graphics> graphics) override;
 	void Update() override;
