@@ -14,17 +14,37 @@ bool CollisionChecker::Init(size_t width, size_t height, std::shared_ptr<std::ve
 	GetInstance().m_width = width;
 	GetInstance().m_height = height;
 	GetInstance().m_gameObjects = gameObjects;
+
+	GetInstance().m_gameObjectsMap = std::vector<std::shared_ptr<GameObject>>(width * height, nullptr);
+
 	return true;
 }
 
-std::shared_ptr<std::vector<bool>> CollisionChecker::GetCollisionMap() const
+void CollisionChecker::Update()
 {
-	std::shared_ptr<std::vector<bool>> collisionMap = std::make_shared<std::vector<bool>>(m_width * m_height, false);
-
+	fill(m_gameObjectsMap.begin(), m_gameObjectsMap.end(), nullptr);
 	for (auto it = m_gameObjects->cbegin(); it != m_gameObjects->cend(); ++it)
 	{
-		(*collisionMap)[CALCULATE_KEY((*it)->GetLocationX(), (*it)->GetLocationY())] = true;
+		m_gameObjectsMap[CALCULATE_KEY((*it)->GetLocationX(), (*it)->GetLocationY())] = *it;
 	}
+}
 
-	return collisionMap;
+void CollisionChecker::Unload()
+{
+	m_gameObjectsMap.clear();
+}
+
+bool CollisionChecker::IsNodeOccupied(int locationX, int locationY) const
+{
+	return IsNodeOccupied(CALCULATE_KEY(locationX, locationY));
+}
+
+bool CollisionChecker::IsNodeOccupied(int node) const
+{
+	return m_gameObjectsMap.at(node) != nullptr;
+}
+
+std::shared_ptr<GameObject> CollisionChecker::At(int locationX, int locationY) const
+{
+	return m_gameObjectsMap.at(CALCULATE_KEY(locationX, locationY));
 }
