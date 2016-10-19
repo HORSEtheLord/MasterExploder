@@ -4,7 +4,7 @@
 #include "ImageLoader.h"
 
 Unit::Unit(int locationX, int locationY, int damage, unsigned int movementSpeed, unsigned int attackSpeed)
-	: GameObject(L"Unit"), m_locationX(locationX), m_locationY(locationY), m_damage(damage), m_movementSpeed(movementSpeed), m_attackSpeed(attackSpeed)
+	: GameObject(L"Unit", locationX, locationY), m_damage(damage), m_movementSpeed(movementSpeed), m_attackSpeed(attackSpeed)
 {
 	if (m_movementSpeed > MAX_MOVEMENT_SPEED)
 	{
@@ -75,22 +75,6 @@ void Unit::Move(int locationX, int locationY)
 	if (!path.empty())
 		m_path = path;
 }
-
-//void Unit::Attack(std::shared_ptr<Building> attackTarget)
-//{
-//	m_attackTarget = nullptr;
-//
-//	std::vector<int> path = AStarAlgorithm::GetInstance().FindPath(
-//		CALCULATE_KEY(m_locationX, m_locationY),
-//		CALCULATE_KEY(attackTarget->GetLocationX(), attackTarget->GetLocationY()),
-//		false);
-//
-//	if (!path.empty())
-//	{
-//		m_path = path;
-//		m_attackTarget = attackTarget;
-//	}
-//}
 
 void Unit::Attack(std::shared_ptr<AttackableGameObject> attackTarget)
 {

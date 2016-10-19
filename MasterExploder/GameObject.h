@@ -10,8 +10,9 @@ private:
 	std::wstring m_name;
 
 protected:
-	GameObject(const std::wstring &name);
+	int m_locationX, m_locationY;
 
+	GameObject(const std::wstring &name, int locationX, int locationY);
 public:
 	virtual ~GameObject() {}
 
@@ -20,4 +21,6 @@ public:
 	virtual void Draw(std::shared_ptr<Graphics> graphics) const = 0;
 
 	const std::wstring& GetName() const { return m_name; }
+	int GetLocationX() const { return m_locationX; };
+	int GetLocationY() const { return m_locationY; }
 };

@@ -9,7 +9,6 @@
 class Building : public AttackableGameObject
 {
 private:
-	int m_locationX, m_locationY;
 	bool m_isDestroyed = false;
 
 	ID2D1Bitmap *m_bmp = nullptr;
@@ -26,7 +25,4 @@ public:
 	bool Init(std::shared_ptr<Graphics> graphics) override;
 	void Update() override;
 	void Draw(std::shared_ptr<Graphics> graphics) const override;
-
-	int GetLocationX() const override { return m_locationX; }
-	int GetLocationY() const override { return m_locationY; }
 };

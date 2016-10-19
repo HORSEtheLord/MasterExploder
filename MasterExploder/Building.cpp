@@ -4,7 +4,7 @@
 #include "Utils.h"
 
 Building::Building(int locationX, int locationY, unsigned int hp)
-	: AttackableGameObject(L"Building", hp, hp), m_locationX(locationX), m_locationY(locationY)
+	: AttackableGameObject(L"Building", locationX, locationY, hp, hp)
 {
 }
 

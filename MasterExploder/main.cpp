@@ -12,8 +12,11 @@
 #include "Timer.h"
 #include "Building.h"
 #include "EnemyUnit.h"
+#include "CollisionChecker.h"
+#include <random>
+#include "Obstacle.h"
 
-std::vector<std::shared_ptr<GameObject>> gameObjects;
+std::shared_ptr<std::vector<std::shared_ptr<GameObject>>> gameObjects;
 std::shared_ptr<Graphics> graphics;
 std::shared_ptr<Terrain> terrain;
 std::shared_ptr<Unit> unit;
@@ -39,21 +42,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			int newX = xPos / TILE_WIDTH;
 			int newY = yPos / TILE_HEIGHT;
 
-			/*LARGE_INTEGER t;
-			QueryPerformanceFrequency(&t);
-			long long frequency = t.QuadPart;
-
-			QueryPerformanceCounter(&t);
-			long long previousTime = t.QuadPart;*/
-
 			unit->Move(newX, newY);
-
-			/*QueryPerformanceCounter(&t);
-			long long currentTime = t.QuadPart;
-			double elapsedTime = currentTime - previousTime;
-			previousTime = currentTime;
-			double milliseconds = 1000 * elapsedTime / frequency;
-			milliseconds = 0;*/
 		}
 	}
 
@@ -106,7 +95,7 @@ HWND createWindow(HINSTANCE hInstance)
 
 bool initGameObjects()
 {
-	for (auto it = gameObjects.cbegin(); it != gameObjects.cend(); ++it)
+	for (auto it = gameObjects->cbegin(); it != gameObjects->cend(); ++it)
 	{
 		if (!(*it)->Init(graphics))
 		{
@@ -120,7 +109,7 @@ bool initGameObjects()
 
 void updateGameObjects()
 {
-	for (auto it = gameObjects.cbegin(); it != gameObjects.cend(); ++it)
+	for (auto it = gameObjects->cbegin(); it != gameObjects->cend(); ++it)
 	{
 		(*it)->Update();
 	}
@@ -128,7 +117,7 @@ void updateGameObjects()
 
 void drawGameObjects()
 {
-	for (auto it = gameObjects.cbegin(); it != gameObjects.cend(); ++it)
+	for (auto it = gameObjects->cbegin(); it != gameObjects->cend(); ++it)
 	{
 		(*it)->Draw(graphics);
 	}
@@ -136,7 +125,7 @@ void drawGameObjects()
 
 void unitialize()
 {
-	gameObjects.clear();
+	gameObjects->clear();
 
 	unit = nullptr;
 	terrain = nullptr;
@@ -179,16 +168,45 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 	}
 
 	terrain = std::make_shared<Terrain>(TERRAIN_WIDTH, TERRAIN_HEIGHT, true);
-	gameObjects.push_back(terrain);
+	if (!terrain->Init(graphics))
+	{
+		Logger::Log(L"Terrain initialization failed.");
+		return false;
+	}
+
+	gameObjects = std::make_shared<std::vector<std::shared_ptr<GameObject>>>();
+
+	if (!CollisionChecker::Init(TERRAIN_WIDTH, TERRAIN_HEIGHT, gameObjects))
+	{
+		Logger::Log(L"CollisionChecker initialization failed.");
+		unitialize();
+		return -1;
+	}
 
 	building = std::make_shared<Building>(39, 29, 300);
-	gameObjects.push_back(building);
+	gameObjects->push_back(building);
 
 	unit = std::make_shared<Unit>(0, 0, 40, 20, 10);
-	gameObjects.push_back(unit);
+	gameObjects->push_back(unit);
 
 	enemyUnit = std::make_shared<EnemyUnit>(39, 28, 300);
-	gameObjects.push_back(enemyUnit);
+	gameObjects->push_back(enemyUnit);
+
+	std::default_random_engine engine(time(0));
+	std::uniform_int_distribution<unsigned> distribution(0, 4);
+
+	std::shared_ptr<std::vector<bool>> collisionMap = CollisionChecker::GetInstance().GetCollisionMap();
+
+	for (int i = 0; i < TERRAIN_WIDTH * TERRAIN_HEIGHT; ++i)
+	{
+		if (!(*collisionMap)[i])
+		{
+			if(!distribution(engine))
+			{
+				gameObjects->push_back(std::make_shared<Obstacle>(CALCULATE_X(i), CALCULATE_Y(i)));
+			}
+		}
+	}
 
 	if(!initGameObjects())
 	{
@@ -197,7 +215,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		return -1;
 	}
 
-	if (!AStarAlgorithm::Init(TERRAIN_WIDTH, TERRAIN_HEIGHT, terrain->GetCollisionMap()))
+	
+
+	if (!AStarAlgorithm::Init(TERRAIN_WIDTH, TERRAIN_HEIGHT))
 	{
 		Logger::Log(L"AStarAlgorithm initialization failed.");
 		unitialize();
@@ -229,6 +249,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 			}
 
 			graphics->BeginDraw();
+			terrain->Draw(graphics);
 			drawGameObjects();
 			graphics->EndDraw();
 		}

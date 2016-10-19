@@ -5,23 +5,20 @@
 #include <unordered_map>
 #include <vector>
 
-#include "GameObject.h"
 #include "Graphics.h"
 #include "Utils.h"
 
-class Terrain : public GameObject
+class Terrain
 {
 public:
 	enum class TerrainType
 	{
-		Empty,
-		Rock
+		Empty
 	};
 
 private:
 	size_t m_terrainWidth = 0, m_terrainHeight = 0;
 	std::shared_ptr<std::vector<TerrainType>> m_map = nullptr;
-	std::shared_ptr<std::vector<bool>> m_collisionMap = nullptr;
 
 	std::unordered_map<TerrainType, ID2D1Bitmap**, EnumClassHash> m_bitmaps;
 
@@ -33,9 +30,6 @@ public:
 
 	void operator=(const Terrain &other) = delete;
 
-	std::shared_ptr<std::vector<bool>> GetCollisionMap() const { return m_collisionMap; }
-
-	bool Init(std::shared_ptr<Graphics> graphics) override;
-	void Update() override;
-	void Draw(std::shared_ptr<Graphics> graphics) const override;
+	bool Init(std::shared_ptr<Graphics> graphics);
+	void Draw(std::shared_ptr<Graphics> graphics) const;
 };

@@ -13,7 +13,6 @@ class Unit : public GameObject
 {
 private:
 	ID2D1Bitmap *m_bmp = nullptr;
-	int m_locationX, m_locationY;
 	std::vector<int> m_path;
 
 	int m_damage;
@@ -23,7 +22,6 @@ private:
 	unsigned int m_movementSpeed, m_attackSpeed;
 	unsigned int m_millisecondsPerMove, m_millisecondsPerAttack;
 	unsigned int m_timeSinceLastMove = 0, m_timeSinceLastAttack = 0;
-	/*std::shared_ptr<Building> m_attackTarget = nullptr;*/
 	std::shared_ptr<AttackableGameObject> m_attackTarget = nullptr;
 public:
 	Unit(int locationX, int locationY, int damage, unsigned int movementSpeed = 1, unsigned int attackSpeed = 1);
@@ -37,6 +35,5 @@ public:
 	void Draw(std::shared_ptr<Graphics> graphics) const override;
 
 	void Move(int locationX, int locationY);
-	/*void Attack(std::shared_ptr<Building> attackTarget);*/
 	void Attack(std::shared_ptr<AttackableGameObject> attackTarget);
 };
