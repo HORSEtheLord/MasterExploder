@@ -22,7 +22,6 @@ std::shared_ptr<Terrain> terrain;
 std::shared_ptr<Unit> unit;
 std::shared_ptr<Building> building;
 std::shared_ptr<Timer> timer;
-std::shared_ptr<EnemyUnit> enemyUnit;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -56,13 +55,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			int newX = xPos / TILE_WIDTH;
 			int newY = yPos / TILE_HEIGHT;
 
-			if (building && building->GetLocationX() == newX && building->GetLocationY() == newY)
+			//MKOS: dynamic_pointer_cast to kiepski pomys³
+			std::shared_ptr<GameObject> target = CollisionChecker::GetInstance().At(newX, newY);
+			std::shared_ptr<AttackableGameObject> attackableTarget;
+			if (target != nullptr && (attackableTarget = std::dynamic_pointer_cast<AttackableGameObject>(target)))
 			{
-				unit->Attack(building);
-			}
-			else if (enemyUnit && enemyUnit->GetLocationX() == newX && enemyUnit->GetLocationY() == newY)
-			{
-				unit->Attack(enemyUnit);
+				unit->Attack(attackableTarget);
 			}
 		}
 	}
@@ -126,12 +124,13 @@ void unitialize()
 {
 	gameObjects->clear();
 
+	CollisionChecker::GetInstance().Unload();
+
 	unit = nullptr;
 	terrain = nullptr;
 	graphics = nullptr;
 	building = nullptr;
 	timer = nullptr;
-	enemyUnit = nullptr;
 
 	CoUninitialize();
 }
@@ -148,7 +147,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		Logger::Log(L"Window creation failed.");
 		return -1;
 	}
-	
+
 	HRESULT hr = CoInitialize(NULL);
 
 	if (hr != S_OK)
@@ -188,34 +187,37 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 	unit = std::make_shared<Unit>(0, 0, 40, 200, 20, 10);
 	gameObjects->push_back(unit);
 
-	enemyUnit = std::make_shared<EnemyUnit>(39, 28, 40, 300, 10);
+	std::shared_ptr<EnemyUnit> enemyUnit = std::make_shared<EnemyUnit>(39, 28, 40, 300, 10);
 	enemyUnit->Attack(unit);
 	gameObjects->push_back(enemyUnit);
+
+	enemyUnit = std::make_shared<EnemyUnit>(15, 20, 40, 300, 10);
+	enemyUnit->Attack(unit);
+	gameObjects->push_back(enemyUnit);
+	enemyUnit = nullptr;
 
 	std::default_random_engine engine(time(0));
 	std::uniform_int_distribution<unsigned> distribution(0, 4);
 
-	std::shared_ptr<std::vector<bool>> collisionMap = CollisionChecker::GetInstance().GetCollisionMap();
+	CollisionChecker::GetInstance().Update();
 
 	for (int i = 0; i < TERRAIN_WIDTH * TERRAIN_HEIGHT; ++i)
 	{
-		if (!(*collisionMap)[i])
+		if (!CollisionChecker::GetInstance().IsNodeOccupied(CALCULATE_X(i), CALCULATE_Y(i)))
 		{
-			if(!distribution(engine))
+			if (!distribution(engine))
 			{
 				gameObjects->push_back(std::make_shared<Obstacle>(CALCULATE_X(i), CALCULATE_Y(i)));
 			}
 		}
 	}
 
-	if(!initGameObjects())
+	if (!initGameObjects())
 	{
 		Logger::Log(L"GameObjects initialization failed.");
 		unitialize();
 		return -1;
 	}
-
-	
 
 	if (!AStarAlgorithm::Init(TERRAIN_WIDTH, TERRAIN_HEIGHT))
 	{
@@ -245,6 +247,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 			while (lag >= MS_PER_UPDATE)
 			{
 				updateGameObjects();
+				CollisionChecker::GetInstance().Update();
 				lag -= MS_PER_UPDATE;
 			}
 

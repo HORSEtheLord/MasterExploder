@@ -7,9 +7,8 @@ class AStarAlgorithm
 {
 private:
 	size_t m_width = 0, m_height = 0;
-	std::shared_ptr<std::vector<bool>> m_collisionMap = nullptr;
 
-	bool IsNodeBlocked(int key) const;
+	static bool IsNodeBlocked(int node);
 	std::vector<int> GetNeighbours(int node) const;
 	float GetEstimatedDistance(int from, int to) const;
 	AStarAlgorithm();
@@ -26,5 +25,5 @@ public:
 		return instance; 
 	}
 
-	std::vector<int> FindPath(int start, int goal, bool includeGoalInPath = true);
+	std::vector<int> FindPath(int start, int goal, bool includeGoalInPath = true) const;
 };

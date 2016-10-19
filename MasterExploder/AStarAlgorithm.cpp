@@ -26,9 +26,9 @@ bool AStarAlgorithm::Init(size_t width, size_t height)
 	return true;
 }
 
-bool AStarAlgorithm::IsNodeBlocked(int key) const
+bool AStarAlgorithm::IsNodeBlocked(int node)
 {
-	return (*m_collisionMap)[key];
+	return CollisionChecker::GetInstance().IsNodeOccupied(node);
 }
 
 std::vector<int> AStarAlgorithm::GetNeighbours(int node) const
@@ -37,15 +37,12 @@ std::vector<int> AStarAlgorithm::GetNeighbours(int node) const
 	int x = CALCULATE_X(node);
 	int y = CALCULATE_Y(node);
 	int key;
+
 	if (x > 0)
 	{
 		key = CALCULATE_KEY(x - 1, y);
 		if (!IsNodeBlocked(key))
 			neighbours.push_back(key);
-		/*if (node->m_y > 0)
-			neighbours.push_back(AStarNode(node->m_x - 1, node->m_y - 1));
-		if (node->m_y < m_height - 1)
-			neighbours.push_back(AStarNode(node->m_x - 1, node->m_y + 1));*/
 	}
 
 	if (x + 1 < m_width)
@@ -53,10 +50,6 @@ std::vector<int> AStarAlgorithm::GetNeighbours(int node) const
 		key = CALCULATE_KEY(x + 1, y);
 		if (!IsNodeBlocked(key))
 			neighbours.push_back(key);
-		/*if (node->m_y > 0)
-			neighbours.push_back(AStarNode(node->m_x + 1, node->m_y - 1));
-		if (node->m_y < m_height - 1)
-			neighbours.push_back(AStarNode(node->m_x + 1, node->m_y + 1));*/
 	}
 
 	if (y > 0)
@@ -65,6 +58,7 @@ std::vector<int> AStarAlgorithm::GetNeighbours(int node) const
 		if (!IsNodeBlocked(key))
 			neighbours.push_back(key);
 	}
+
 	if (y + 1 < m_height)
 	{
 		key = CALCULATE_KEY(x, y + 1);
@@ -82,10 +76,8 @@ float AStarAlgorithm::GetEstimatedDistance(int from, int to) const
 	return estimatedDistance;
 }
 
-std::vector<int> AStarAlgorithm::FindPath(int start, int goal, bool includeGoalInPath)
+std::vector<int> AStarAlgorithm::FindPath(int start, int goal, bool includeGoalInPath) const
 {
-	m_collisionMap = CollisionChecker::GetInstance().GetCollisionMap();
-
 	std::unordered_set<int> goalNodes;
 
 	if (includeGoalInPath)
