@@ -17,6 +17,11 @@ bool CollisionChecker::Init(size_t width, size_t height, std::shared_ptr<std::ve
 	return true;
 }
 
+bool CollisionChecker::CheckAdjacency(int x1, int y1, int x2, int y2)
+{
+	return (abs(x1 - x2) + abs(y1 - y2)) == 1;
+}
+
 std::shared_ptr<std::vector<bool>> CollisionChecker::GetCollisionMap() const
 {
 	std::shared_ptr<std::vector<bool>> collisionMap = std::make_shared<std::vector<bool>>(m_width * m_height, false);

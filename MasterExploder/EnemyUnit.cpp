@@ -3,9 +3,19 @@
 #include "Utils.h"
 #include "ImageLoader.h"
 
-EnemyUnit::EnemyUnit(int locationX, int locationY, unsigned int hp)
-	: AttackableGameObject(L"EnemyUnit", locationX, locationY, hp, hp)
+EnemyUnit::EnemyUnit(int locationX, int locationY, int damage, unsigned int hp, unsigned int attackSpeed)
+	: AttackableGameObject(L"EnemyUnit", locationX, locationY, hp, hp), m_damage(damage), m_attackSpeed(attackSpeed)
 {
+	if (m_attackSpeed > MAX_ATTACK_SPEED)
+	{
+		m_attackSpeed = MAX_ATTACK_SPEED;
+	}
+	else if (m_attackSpeed == 0)
+	{
+		m_attackSpeed = 1;
+	}
+
+	m_millisecondsPerAttack = DEFAULT_SPEED / m_attackSpeed;
 }
 
 EnemyUnit::~EnemyUnit()
@@ -39,6 +49,19 @@ bool EnemyUnit::Init(std::shared_ptr<Graphics> graphics)
 
 void EnemyUnit::Update()
 {
+	m_timeSinceLastAttack += MS_PER_UPDATE;
+
+	if (m_timeSinceLastAttack >= m_millisecondsPerAttack)
+	{
+		m_timeSinceLastAttack -= m_millisecondsPerAttack;
+		//bool isAdjacent = CollisionChecker::CheckAdjacency(m_locationX, m_locationY, m_attackTarget->GetLocationX(), m_attackTarget->GetLocationY());
+		if(m_attackTarget != nullptr && CollisionChecker::CheckAdjacency(m_locationX, m_locationY,
+				m_attackTarget->GetLocationX(), m_attackTarget->GetLocationY()))
+		{
+			if (m_attackTarget->ReceiveDamage(m_damage))
+				m_attackTarget = nullptr;
+		}
+	}
 }
 
 void EnemyUnit::Draw(std::shared_ptr<Graphics> graphics) const
@@ -57,4 +80,9 @@ void EnemyUnit::Draw(std::shared_ptr<Graphics> graphics) const
 		1.0f,
 		D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
 		D2D1::RectF(0.0f, 0.0f, bmp->GetSize().width, bmp->GetSize().height));
+}
+
+void EnemyUnit::Attack(std::shared_ptr<AttackableGameObject> attackTarget)
+{
+	m_attackTarget = attackTarget;
 }

@@ -11,6 +11,8 @@
 #define MAX_MOVEMENT_SPEED (1000 / MS_PER_UPDATE)
 #define MAX_ATTACK_SPEED (1000 / MS_PER_UPDATE)
 
+#define DEFAULT_SPEED 1000
+
 #define CALCULATE_X(key) ((key) / TERRAIN_HEIGHT)
 #define CALCULATE_Y(key) ((key) % TERRAIN_HEIGHT)
 #define CALCULATE_KEY(x, y) ((x) * TERRAIN_HEIGHT + (y))

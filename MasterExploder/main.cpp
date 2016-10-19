@@ -185,10 +185,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 	building = std::make_shared<Building>(39, 29, 300);
 	gameObjects->push_back(building);
 
-	unit = std::make_shared<Unit>(0, 0, 40, 20, 10);
+	unit = std::make_shared<Unit>(0, 0, 40, 200, 20, 10);
 	gameObjects->push_back(unit);
 
-	enemyUnit = std::make_shared<EnemyUnit>(39, 28, 300);
+	enemyUnit = std::make_shared<EnemyUnit>(39, 28, 40, 300, 10);
+	enemyUnit->Attack(unit);
 	gameObjects->push_back(enemyUnit);
 
 	std::default_random_engine engine(time(0));

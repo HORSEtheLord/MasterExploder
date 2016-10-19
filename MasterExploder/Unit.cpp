@@ -3,8 +3,9 @@
 #include "Utils.h"
 #include "ImageLoader.h"
 
-Unit::Unit(int locationX, int locationY, int damage, unsigned int movementSpeed, unsigned int attackSpeed)
-	: GameObject(L"Unit", locationX, locationY), m_damage(damage), m_movementSpeed(movementSpeed), m_attackSpeed(attackSpeed)
+Unit::Unit(int locationX, int locationY, int damage, unsigned int hp, unsigned int movementSpeed, unsigned int attackSpeed)
+	: AttackableGameObject(L"Unit", locationX, locationY, hp, hp), m_damage(damage), 
+	m_movementSpeed(movementSpeed), m_attackSpeed(attackSpeed)
 {
 	if (m_movementSpeed > MAX_MOVEMENT_SPEED)
 	{
@@ -24,15 +25,16 @@ Unit::Unit(int locationX, int locationY, int damage, unsigned int movementSpeed,
 		m_attackSpeed = 1;
 	}
 
-	int defaultSpeed = 1000;
-	m_millisecondsPerMove = defaultSpeed / m_movementSpeed;
-	m_millisecondsPerAttack = defaultSpeed / m_attackSpeed;
+	m_millisecondsPerMove = DEFAULT_SPEED / m_movementSpeed;
+	m_millisecondsPerAttack = DEFAULT_SPEED / m_attackSpeed;
 }
 
 Unit::~Unit()
 {
 	if (m_bmp)
 		m_bmp->Release();
+	if (m_bmpDead)
+		m_bmpDead->Release();
 }
 
 bool Unit::Init(std::shared_ptr<Graphics> graphics)
@@ -42,6 +44,14 @@ bool Unit::Init(std::shared_ptr<Graphics> graphics)
 	if (!ImageLoader::LoadSprite(graphics, filename, &m_bmp))
 	{
 		Logger::Log(L"Sprite loading failed. File: " + std::wstring(filename));
+		return false;
+	}
+
+	wchar_t *filenameDestroyed = L"unit1_dead.png";
+
+	if (!ImageLoader::LoadSprite(graphics, filenameDestroyed, &m_bmpDead))
+	{
+		Logger::Log(L"Enemy unit sprite loading failed. File: " + std::wstring(filenameDestroyed));
 		return false;
 	}
 
@@ -56,12 +66,14 @@ void Unit::Draw(std::shared_ptr<Graphics> graphics) const
 	int locationX = m_locationX * width;
 	int locationY = m_locationY * height;
 
+	ID2D1Bitmap *bmp = m_isDead ? m_bmpDead : m_bmp;
+
 	graphics->GetRenderTarget()->DrawBitmap(
-		m_bmp,
+		bmp,
 		D2D1::RectF(locationX, locationY, locationX + width, locationY + height),
 		1.0f,
 		D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
-		D2D1::RectF(0.0f, 0.0f, m_bmp->GetSize().width, m_bmp->GetSize().height));
+		D2D1::RectF(0.0f, 0.0f, bmp->GetSize().width, bmp->GetSize().height));
 }
 
 void Unit::Move(int locationX, int locationY)
