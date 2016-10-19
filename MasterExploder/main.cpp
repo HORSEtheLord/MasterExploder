@@ -58,7 +58,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			//MKOS: dynamic_pointer_cast to kiepski pomys³
 			std::shared_ptr<GameObject> target = CollisionChecker::GetInstance().At(newX, newY);
 			std::shared_ptr<AttackableGameObject> attackableTarget;
-			if(target != nullptr && (attackableTarget = std::dynamic_pointer_cast<AttackableGameObject>(target)))
+			if (target != nullptr && (attackableTarget = std::dynamic_pointer_cast<AttackableGameObject>(target)))
 			{
 				unit->Attack(attackableTarget);
 			}
@@ -147,7 +147,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		Logger::Log(L"Window creation failed.");
 		return -1;
 	}
-	
+
 	HRESULT hr = CoInitialize(NULL);
 
 	if (hr != S_OK)
@@ -184,14 +184,17 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 	building = std::make_shared<Building>(39, 29, 300);
 	gameObjects->push_back(building);
 
-	unit = std::make_shared<Unit>(0, 0, 40, 20, 10);
+	unit = std::make_shared<Unit>(0, 0, 40, 200, 20, 10);
 	gameObjects->push_back(unit);
 
-	std::shared_ptr<EnemyUnit> enemyUnit = std::make_shared<EnemyUnit>(39, 28, 300);
+	std::shared_ptr<EnemyUnit> enemyUnit = std::make_shared<EnemyUnit>(39, 28, 40, 300, 10);
+	enemyUnit->Attack(unit);
+	gameObjects->push_back(enemyUnit);
+
+	enemyUnit = std::make_shared<EnemyUnit>(15, 20, 40, 300, 10);
+	enemyUnit->Attack(unit);
 	gameObjects->push_back(enemyUnit);
 	enemyUnit = nullptr;
-	
-	gameObjects->push_back(std::make_shared<EnemyUnit>(15, 20, 300));
 
 	std::default_random_engine engine(time(0));
 	std::uniform_int_distribution<unsigned> distribution(0, 4);
@@ -200,16 +203,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 
 	for (int i = 0; i < TERRAIN_WIDTH * TERRAIN_HEIGHT; ++i)
 	{
-		if(!CollisionChecker::GetInstance().IsNodeOccupied(CALCULATE_X(i), CALCULATE_Y(i)))
+		if (!CollisionChecker::GetInstance().IsNodeOccupied(CALCULATE_X(i), CALCULATE_Y(i)))
 		{
-			if(!distribution(engine))
+			if (!distribution(engine))
 			{
 				gameObjects->push_back(std::make_shared<Obstacle>(CALCULATE_X(i), CALCULATE_Y(i)));
 			}
 		}
 	}
 
-	if(!initGameObjects())
+	if (!initGameObjects())
 	{
 		Logger::Log(L"GameObjects initialization failed.");
 		unitialize();

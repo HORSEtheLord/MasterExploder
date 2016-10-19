@@ -9,10 +9,11 @@
 #include "EnemyUnit.h"
 #include "AttackableGameObject.h"
 
-class Unit : public GameObject
+class Unit : public AttackableGameObject
 {
 private:
 	ID2D1Bitmap *m_bmp = nullptr;
+	ID2D1Bitmap *m_bmpDead = nullptr;
 	std::vector<int> m_path;
 
 	int m_damage;
@@ -24,7 +25,8 @@ private:
 	unsigned int m_timeSinceLastMove = 0, m_timeSinceLastAttack = 0;
 	std::shared_ptr<AttackableGameObject> m_attackTarget = nullptr;
 public:
-	Unit(int locationX, int locationY, int damage, unsigned int movementSpeed = 1, unsigned int attackSpeed = 1);
+	Unit(int locationX, int locationY, int damage, unsigned int hp, unsigned int movementSpeed = 1,
+		unsigned int attackSpeed = 1);
 	Unit(const Unit &other) = delete;
 	virtual ~Unit();
 

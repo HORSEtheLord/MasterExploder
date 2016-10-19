@@ -20,6 +20,11 @@ bool CollisionChecker::Init(size_t width, size_t height, std::shared_ptr<std::ve
 	return true;
 }
 
+bool CollisionChecker::CheckAdjacency(int x1, int y1, int x2, int y2)
+{
+	return (abs(x1 - x2) + abs(y1 - y2)) == 1;
+}
+
 void CollisionChecker::Update()
 {
 	fill(m_gameObjectsMap.begin(), m_gameObjectsMap.end(), nullptr);

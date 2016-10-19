@@ -154,5 +154,8 @@
     <Image Include="building1_destroyed.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="unit1_dead.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
