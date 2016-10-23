@@ -54,7 +54,6 @@ void EnemyUnit::Update()
 	if (m_timeSinceLastAttack >= m_millisecondsPerAttack)
 	{
 		m_timeSinceLastAttack -= m_millisecondsPerAttack;
-		//bool isAdjacent = CollisionChecker::CheckAdjacency(m_locationX, m_locationY, m_attackTarget->GetLocationX(), m_attackTarget->GetLocationY());
 		if(m_attackTarget != nullptr && CollisionChecker::CheckAdjacency(m_locationX, m_locationY,
 				m_attackTarget->GetLocationX(), m_attackTarget->GetLocationY()))
 		{

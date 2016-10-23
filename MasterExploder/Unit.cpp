@@ -51,7 +51,7 @@ bool Unit::Init(std::shared_ptr<Graphics> graphics)
 
 	if (!ImageLoader::LoadSprite(graphics, filenameDestroyed, &m_bmpDead))
 	{
-		Logger::Log(L"Enemy unit sprite loading failed. File: " + std::wstring(filenameDestroyed));
+		Logger::Log(L"Sprite loading failed. File: " + std::wstring(filenameDestroyed));
 		return false;
 	}
 
@@ -79,28 +79,32 @@ void Unit::Draw(std::shared_ptr<Graphics> graphics) const
 void Unit::Move(int locationX, int locationY)
 {
 	m_attackTarget = nullptr;
+	if (!m_isDead)
+	{
+		std::vector<int> path = AStarAlgorithm::GetInstance().FindPath(
+			CALCULATE_KEY(m_locationX, m_locationY),
+			CALCULATE_KEY(locationX, locationY));
 
-	std::vector<int> path = AStarAlgorithm::GetInstance().FindPath(
-		CALCULATE_KEY(m_locationX, m_locationY),
-		CALCULATE_KEY(locationX, locationY));
-
-	if (!path.empty())
-		m_path = path;
+		if (!path.empty())
+			m_path = path;
+	}
 }
 
 void Unit::Attack(std::shared_ptr<AttackableGameObject> attackTarget)
 {
 	m_attackTarget = nullptr;
-
-	std::vector<int> path = AStarAlgorithm::GetInstance().FindPath(
-		CALCULATE_KEY(m_locationX, m_locationY),
-		CALCULATE_KEY(attackTarget->GetLocationX(), attackTarget->GetLocationY()),
-		false);
-
-	if (!path.empty())
+	if (!m_isDead)
 	{
-		m_path = path;
-		m_attackTarget = attackTarget;
+		std::vector<int> path = AStarAlgorithm::GetInstance().FindPath(
+			CALCULATE_KEY(m_locationX, m_locationY),
+			CALCULATE_KEY(attackTarget->GetLocationX(), attackTarget->GetLocationY()),
+			false);
+
+		if (!path.empty())
+		{
+			m_path = path;
+			m_attackTarget = attackTarget;
+		}
 	}
 }
 
@@ -109,25 +113,28 @@ void Unit::Update()
 	m_timeSinceLastMove += MS_PER_UPDATE;
 	m_timeSinceLastAttack += MS_PER_UPDATE;
 
-	if (m_timeSinceLastMove >= m_millisecondsPerMove)
+	if (!m_isDead)
 	{
-		m_timeSinceLastMove -= m_millisecondsPerMove;
-		if (!m_path.empty())
+		if (m_timeSinceLastMove >= m_millisecondsPerMove)
 		{
-			int node = *m_path.begin();
-			m_locationX = CALCULATE_X(node);
-			m_locationY = CALCULATE_Y(node);
-			m_path.erase(m_path.begin());
+			m_timeSinceLastMove -= m_millisecondsPerMove;
+			if (!m_path.empty())
+			{
+				int node = *m_path.begin();
+				m_locationX = CALCULATE_X(node);
+				m_locationY = CALCULATE_Y(node);
+				m_path.erase(m_path.begin());
+			}
 		}
-	}
 
-	if (m_timeSinceLastAttack >= m_millisecondsPerAttack)
-	{
-		m_timeSinceLastAttack -= m_millisecondsPerAttack;
-		if(m_path.empty() && m_attackTarget != nullptr)
+		if (m_timeSinceLastAttack >= m_millisecondsPerAttack)
 		{
-			if (m_attackTarget->ReceiveDamage(m_damage))
-				m_attackTarget = nullptr;
+			m_timeSinceLastAttack -= m_millisecondsPerAttack;
+			if (m_path.empty() && m_attackTarget != nullptr)
+			{
+				if (m_attackTarget->ReceiveDamage(m_damage))
+					m_attackTarget = nullptr;
+			}
 		}
 	}
 }
