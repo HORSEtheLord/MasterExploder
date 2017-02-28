@@ -121,31 +121,57 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AStarAlgorithm.cpp" />
+    <ClCompile Include="AStarComponent.cpp" />
+    <ClCompile Include="AStarSystem.cpp" />
     <ClCompile Include="AttackableGameObject.cpp" />
     <ClCompile Include="Building.cpp" />
     <ClCompile Include="CollisionChecker.cpp" />
+    <ClCompile Include="CollisionComponent.cpp" />
+    <ClCompile Include="CollisionSystem.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="EnemyUnit.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MovementComponent.cpp" />
+    <ClCompile Include="MovementSystem.cpp" />
     <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="PositionComponent.cpp" />
+    <ClCompile Include="RenderComponent.cpp" />
+    <ClCompile Include="RenderSystem.cpp" />
+    <ClCompile Include="SpriteManager.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Unit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AStarAlgorithm.h" />
+    <ClInclude Include="AStarComponent.h" />
+    <ClInclude Include="AStarSystem.h" />
     <ClInclude Include="AttackableGameObject.h" />
     <ClInclude Include="Building.h" />
     <ClInclude Include="CollisionChecker.h" />
+    <ClInclude Include="CollisionComponent.h" />
+    <ClInclude Include="CollisionSystem.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="EnemyUnit.h" />
+    <ClInclude Include="ComponentManager.h" />
+    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="MovementComponent.h" />
+    <ClInclude Include="MovementSystem.h" />
     <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="PositionComponent.h" />
+    <ClInclude Include="ISystem.h" />
+    <ClInclude Include="RenderComponent.h" />
+    <ClInclude Include="RenderSystem.h" />
+    <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Unit.h" />

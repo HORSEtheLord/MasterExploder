@@ -16,13 +16,13 @@ Obstacle::~Obstacle()
 
 bool Obstacle::Init(std::shared_ptr<Graphics> graphics)
 {
-	wchar_t *filename = L"tile2.png";
+	/*wchar_t *filename = L"tile2.png";
 
 	if (!ImageLoader::LoadSprite(graphics, filename, &m_bmp))
 	{
 		Logger::Log(GetName() + L" sprite loading failed. File: " + std::wstring(filename));
 		return false;
-	}
+	}*/
 
 	return true;
 }

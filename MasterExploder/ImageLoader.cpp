@@ -1,5 +1,6 @@
 #include "ImageLoader.h"
 #include "Logger.h"
+#include <wincodec.h>
 
 void safeReleaseResources(IWICImagingFactory *wicFactory,
 	IWICBitmapDecoder *wicDecoder,
@@ -12,7 +13,7 @@ void safeReleaseResources(IWICImagingFactory *wicFactory,
 	if (wicConverter) wicConverter->Release();
 }
 
-bool ImageLoader::LoadSprite(std::shared_ptr<Graphics> graphics, wchar_t *filename, ID2D1Bitmap **bmp)
+bool ImageLoader::LoadSprite(const Graphics &graphics, wchar_t *filename, ID2D1Bitmap **bmp)
 {
 	HRESULT res;
 
@@ -82,7 +83,7 @@ bool ImageLoader::LoadSprite(std::shared_ptr<Graphics> graphics, wchar_t *filena
 		return false;
 	}
 
-	res = graphics->GetRenderTarget()->CreateBitmapFromWicBitmap(
+	res = graphics.GetRenderTarget()->CreateBitmapFromWicBitmap(
 		wicConverter,
 		NULL,
 		bmp);

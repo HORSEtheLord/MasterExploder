@@ -15,13 +15,20 @@
 #include "CollisionChecker.h"
 #include <random>
 #include "Obstacle.h"
+#include "EntityManager.h"
+#include "SpriteManager.h"
+#include "MovementSystem.h"
+#include "RenderSystem.h"
+#include "AStarSystem.h"
 
-std::shared_ptr<std::vector<std::shared_ptr<GameObject>>> gameObjects;
-std::shared_ptr<Graphics> graphics;
+//std::shared_ptr<std::vector<std::shared_ptr<GameObject>>> gameObjects;
+//std::shared_ptr<Graphics> graphics;
+Graphics graphics;
 std::shared_ptr<Terrain> terrain;
-std::shared_ptr<Unit> unit;
-std::shared_ptr<Building> building;
+//std::shared_ptr<Unit> unit;
+//std::shared_ptr<Building> building;
 std::shared_ptr<Timer> timer;
+EntityManager entityManager;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -33,37 +40,35 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	if (uMsg == WM_LBUTTONUP)
 	{
-		if (unit)
-		{
-			int xPos = GET_X_LPARAM(lParam);
-			int yPos = GET_Y_LPARAM(lParam);
+		std::reference_wrapper<AStarComponent> aStarComponent = entityManager.m_aStarComponents.GetComponent(0);
+		int xPos = GET_X_LPARAM(lParam);
+		int yPos = GET_Y_LPARAM(lParam);
 
-			int newX = xPos / TILE_WIDTH;
-			int newY = yPos / TILE_HEIGHT;
+		int newX = xPos / TILE_WIDTH;
+		int newY = yPos / TILE_HEIGHT;
 
-			unit->Move(newX, newY);
-		}
+		aStarComponent.get().Activate(newX, newY);
 	}
 
-	if (uMsg == WM_RBUTTONUP)
-	{
-		if (unit)
-		{
-			int xPos = GET_X_LPARAM(lParam);
-			int yPos = GET_Y_LPARAM(lParam);
+	//if (uMsg == WM_RBUTTONUP)
+	//{
+	//	if (unit)
+	//	{
+	//		int xPos = GET_X_LPARAM(lParam);
+	//		int yPos = GET_Y_LPARAM(lParam);
 
-			int newX = xPos / TILE_WIDTH;
-			int newY = yPos / TILE_HEIGHT;
+	//		int newX = xPos / TILE_WIDTH;
+	//		int newY = yPos / TILE_HEIGHT;
 
-			//MKOS: dynamic_pointer_cast to kiepski pomys³
-			std::shared_ptr<GameObject> target = CollisionChecker::GetInstance().At(newX, newY);
-			std::shared_ptr<AttackableGameObject> attackableTarget;
-			if (target != nullptr && (attackableTarget = std::dynamic_pointer_cast<AttackableGameObject>(target)))
-			{
-				unit->Attack(attackableTarget);
-			}
-		}
-	}
+	//		//MKOS: dynamic_pointer_cast to kiepski pomys³
+	//		std::shared_ptr<GameObject> target = CollisionChecker::GetInstance().At(newX, newY);
+	//		std::shared_ptr<AttackableGameObject> attackableTarget;
+	//		if (target != nullptr && (attackableTarget = std::dynamic_pointer_cast<AttackableGameObject>(target)))
+	//		{
+	//			unit->Attack(attackableTarget);
+	//		}
+	//	}
+	//}
 
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
@@ -90,47 +95,48 @@ HWND createWindow(HINSTANCE hInstance)
 	return windowHandle;
 }
 
-bool initGameObjects()
-{
-	for (auto it = gameObjects->cbegin(); it != gameObjects->cend(); ++it)
-	{
-		if (!(*it)->Init(graphics))
-		{
-			Logger::Log((*it)->GetName() + L" initialization failed.");
-			return false;
-		}
-	}
+//bool initGameObjects()
+//{
+//	for (auto it = gameObjects->cbegin(); it != gameObjects->cend(); ++it)
+//	{
+//		if (!(*it)->Init(graphics))
+//		{
+//			Logger::Log((*it)->GetName() + L" initialization failed.");
+//			return false;
+//		}
+//	}
+//
+//	return true;
+//}
 
-	return true;
-}
-
-void updateGameObjects()
-{
-	for (auto it = gameObjects->cbegin(); it != gameObjects->cend(); ++it)
-	{
-		(*it)->Update();
-	}
-}
-
-void drawGameObjects()
-{
-	for (auto it = gameObjects->cbegin(); it != gameObjects->cend(); ++it)
-	{
-		(*it)->Draw(graphics);
-	}
-}
+//void updateGameObjects()
+//{
+//	for (auto it = gameObjects->cbegin(); it != gameObjects->cend(); ++it)
+//	{
+//		(*it)->Update();
+//	}
+//}
+//
+//void drawGameObjects()
+//{
+//	for (auto it = gameObjects->cbegin(); it != gameObjects->cend(); ++it)
+//	{
+//		(*it)->Draw(graphics);
+//	}
+//}
 
 void unitialize()
 {
-	gameObjects->clear();
+	//gameObjects->clear();
 
-	CollisionChecker::GetInstance().Unload();
+	//CollisionChecker::GetInstance().Unload();
 
-	unit = nullptr;
+	//unit = nullptr;
 	terrain = nullptr;
-	graphics = nullptr;
-	building = nullptr;
+	//building = nullptr;
 	timer = nullptr;
+
+	SpriteManager::GetInstance().Unload();
 
 	CoUninitialize();
 }
@@ -156,23 +162,23 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 		return -1;
 	}
 
-	graphics = std::make_shared<Graphics>();
-
-	if (!graphics->Init(windowHandle))
+	if (!graphics.Init(windowHandle))
 	{
 		Logger::Log(L"Graphics initialization failed.");
 		unitialize();
 		return -1;
 	}
 
-	terrain = std::make_shared<Terrain>(TERRAIN_WIDTH, TERRAIN_HEIGHT, true);
-	if (!terrain->Init(graphics))
+	if (!SpriteManager::GetInstance().Load(graphics))
 	{
-		Logger::Log(L"Terrain initialization failed.");
-		return false;
+		Logger::Log(L"SpriteManager initialization failed.");
+		unitialize();
+		return -1;
 	}
 
-	gameObjects = std::make_shared<std::vector<std::shared_ptr<GameObject>>>();
+	terrain = std::make_shared<Terrain>(TERRAIN_WIDTH, TERRAIN_HEIGHT, true);
+
+	/*gameObjects = std::make_shared<std::vector<std::shared_ptr<GameObject>>>();
 
 	if (!CollisionChecker::Init(TERRAIN_WIDTH, TERRAIN_HEIGHT, gameObjects))
 	{
@@ -194,9 +200,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 	enemyUnit = std::make_shared<EnemyUnit>(15, 20, 40, 300, 10);
 	enemyUnit->Attack(unit);
 	gameObjects->push_back(enemyUnit);
-	enemyUnit = nullptr;
+	enemyUnit = nullptr;*/
 
-	std::default_random_engine engine(time(0));
+	/*std::default_random_engine engine(time(0));
 	std::uniform_int_distribution<unsigned> distribution(0, 4);
 
 	CollisionChecker::GetInstance().Update();
@@ -210,20 +216,49 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 				gameObjects->push_back(std::make_shared<Obstacle>(CALCULATE_X(i), CALCULATE_Y(i)));
 			}
 		}
-	}
+	}*/
 
-	if (!initGameObjects())
+	/*if (!initGameObjects())
 	{
 		Logger::Log(L"GameObjects initialization failed.");
 		unitialize();
 		return -1;
-	}
+	}*/
 
-	if (!AStarAlgorithm::Init(TERRAIN_WIDTH, TERRAIN_HEIGHT))
+	//EntityManager entityManager;
+
+	MovementSystem movementSystem(entityManager.m_movementComponents.GetComponentsCollection());
+	RenderSystem renderSystem(entityManager.m_renderComponents.GetComponentsCollection());
+	AStarSystem aStarSystem(entityManager.m_aStarComponents.GetComponentsCollection());
+	CollisionSystem collisionSystem(entityManager.m_collisionComponents.GetComponentsCollection());
+
+	if (!AStarAlgorithm::Init(TERRAIN_WIDTH, TERRAIN_HEIGHT, &collisionSystem))
 	{
 		Logger::Log(L"AStarAlgorithm initialization failed.");
 		unitialize();
 		return -1;
+	}
+
+	EntityId entityId = EntityManager::GenerateEntityId();
+
+	entityManager.m_positionComponents.Insert(entityId, 0, 0);
+	entityManager.m_renderComponents.Insert(entityId, entityManager.m_positionComponents.GetComponent(entityId), 0);
+	entityManager.m_movementComponents.Insert(entityId, entityManager.m_positionComponents.GetComponent(entityId), 10);
+	entityManager.m_aStarComponents.Insert(entityId, entityManager.m_positionComponents.GetComponent(entityId), entityManager.m_movementComponents.GetComponent(entityId));
+	entityManager.m_collisionComponents.Insert(entityId, entityManager.m_positionComponents.GetComponent(entityId));
+
+	std::default_random_engine engine(time(nullptr));
+	std::uniform_int_distribution<unsigned> distribution(0, 4);
+
+	for (int i = 1; i < TERRAIN_WIDTH * TERRAIN_HEIGHT; ++i)
+	{
+		if (!distribution(engine))
+		{
+			entityId = EntityManager::GenerateEntityId();
+			entityManager.m_positionComponents.Insert(entityId, CALCULATE_X(i), CALCULATE_Y(i));
+			entityManager.m_renderComponents.Insert(entityId, entityManager.m_positionComponents.GetComponent(entityId), 2);
+			entityManager.m_collisionComponents.Insert(entityId, entityManager.m_positionComponents.GetComponent(entityId));
+		}
 	}
 
 	ShowWindow(windowHandle, nCmdShow);
@@ -246,15 +281,18 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmd, int
 
 			while (lag >= MS_PER_UPDATE)
 			{
-				updateGameObjects();
-				CollisionChecker::GetInstance().Update();
+				//updateGameObjects();
+				//CollisionChecker::GetInstance().Update();
+				aStarSystem.Update();
+				movementSystem.Update();
 				lag -= MS_PER_UPDATE;
 			}
 
-			graphics->BeginDraw();
+			graphics.BeginDraw();
 			terrain->Draw(graphics);
-			drawGameObjects();
-			graphics->EndDraw();
+			renderSystem.Draw(graphics);
+			//drawGameObjects();
+			graphics.EndDraw();
 		}
 	}
 

@@ -17,6 +17,11 @@
 #define CALCULATE_Y(key) ((key) % TERRAIN_HEIGHT)
 #define CALCULATE_KEY(x, y) ((x) * TERRAIN_HEIGHT + (y))
 
+typedef unsigned int EntityId;
+typedef unsigned int SpriteId;
+
+#define MAX_ENTITIES 1000
+
 struct EnumClassHash
 {
 	template <typename T>

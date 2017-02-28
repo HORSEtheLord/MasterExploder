@@ -39,7 +39,7 @@ Unit::~Unit()
 
 bool Unit::Init(std::shared_ptr<Graphics> graphics)
 {
-	wchar_t *filename = L"unit1.png";
+	/*wchar_t *filename = L"unit1.png";
 
 	if (!ImageLoader::LoadSprite(graphics, filename, &m_bmp))
 	{
@@ -53,7 +53,7 @@ bool Unit::Init(std::shared_ptr<Graphics> graphics)
 	{
 		Logger::Log(L"Sprite loading failed. File: " + std::wstring(filenameDestroyed));
 		return false;
-	}
+	}*/
 
 	return true;
 }

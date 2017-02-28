@@ -28,7 +28,7 @@ EnemyUnit::~EnemyUnit()
 
 bool EnemyUnit::Init(std::shared_ptr<Graphics> graphics)
 {
-	wchar_t *filename = L"enemy_unit1.png";
+	/*wchar_t *filename = L"enemy_unit1.png";
 
 	if (!ImageLoader::LoadSprite(graphics, filename, &m_bmp))
 	{
@@ -42,7 +42,7 @@ bool EnemyUnit::Init(std::shared_ptr<Graphics> graphics)
 	{
 		Logger::Log(L"Enemy unit sprite loading failed. File: " + std::wstring(filenameDestroyed));
 		return false;
-	}
+	}*/
 
 	return true;
 }

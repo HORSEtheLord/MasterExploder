@@ -1,8 +1,3 @@
-#include <algorithm>
-#include <cmath>
-#include <limits>
-#include <memory>
-#include <set>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -12,6 +7,7 @@
 #include "CollisionChecker.h"
 
 AStarAlgorithm::AStarAlgorithm()
+	: m_collisionSystem(nullptr)
 {
 }
 
@@ -19,16 +15,24 @@ AStarAlgorithm::~AStarAlgorithm()
 {
 }
 
-bool AStarAlgorithm::Init(size_t width, size_t height)
+bool AStarAlgorithm::Init(size_t width, size_t height, CollisionSystem *collisionSystem)
 {
 	GetInstance().m_width = width;
 	GetInstance().m_height = height;
+	GetInstance().m_collisionSystem = collisionSystem;
 	return true;
 }
 
-bool AStarAlgorithm::IsNodeBlocked(int node)
+bool AStarAlgorithm::IsNodeBlocked(int node) const
 {
-	return CollisionChecker::GetInstance().IsNodeOccupied(node);
+	int x = CALCULATE_X(node);
+	int y = CALCULATE_Y(node);
+	return IsNodeBlocked(x, y);
+}
+
+bool AStarAlgorithm::IsNodeBlocked(int x, int y) const
+{
+	return m_collisionSystem->Collide(x, y);
 }
 
 std::vector<int> AStarAlgorithm::GetNeighbours(int node) const
@@ -40,30 +44,38 @@ std::vector<int> AStarAlgorithm::GetNeighbours(int node) const
 
 	if (x > 0)
 	{
-		key = CALCULATE_KEY(x - 1, y);
-		if (!IsNodeBlocked(key))
+		if (!IsNodeBlocked(x - 1, y))
+		{
+			key = CALCULATE_KEY(x - 1, y);
 			neighbours.push_back(key);
+		}
 	}
 
 	if (x + 1 < m_width)
 	{
-		key = CALCULATE_KEY(x + 1, y);
-		if (!IsNodeBlocked(key))
+		if (!IsNodeBlocked(x + 1, y))
+		{
+			key = CALCULATE_KEY(x + 1, y);
 			neighbours.push_back(key);
+		}
 	}
 
 	if (y > 0)
 	{
-		key = CALCULATE_KEY(x, y - 1);
-		if (!IsNodeBlocked(key))
+		if (!IsNodeBlocked(x, y - 1))
+		{
+			key = CALCULATE_KEY(x, y - 1);
 			neighbours.push_back(key);
+		}
 	}
 
 	if (y + 1 < m_height)
 	{
-		key = CALCULATE_KEY(x, y + 1);
-		if (!IsNodeBlocked(key))
+		if (!IsNodeBlocked(x, y + 1))
+		{
+			key = CALCULATE_KEY(x, y + 1);
 			neighbours.push_back(key);
+		}
 	}
 
 	return neighbours;

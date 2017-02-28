@@ -18,7 +18,7 @@ Building::~Building()
 
 bool Building::Init(std::shared_ptr<Graphics> graphics)
 {
-	wchar_t *filename = L"building1.png";
+	/*wchar_t *filename = L"building1.png";
 
 	if (!ImageLoader::LoadSprite(graphics, filename, &m_bmp))
 	{
@@ -32,7 +32,7 @@ bool Building::Init(std::shared_ptr<Graphics> graphics)
 	{
 		Logger::Log(L"Building sprite loading failed. File: " + std::wstring(filenameDestroyed));
 		return false;
-	}
+	}*/
 
 	return true;
 }

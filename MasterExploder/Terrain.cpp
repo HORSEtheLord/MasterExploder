@@ -5,10 +5,13 @@
 #include "Logger.h"
 #include "Utils.h"
 #include "ImageLoader.h"
+#include "SpriteManager.h"
 
 Terrain::Terrain(size_t terrainWidth, size_t terrainHeight, bool drawMesh)
 	: m_terrainWidth(terrainWidth), m_terrainHeight(terrainHeight), m_drawMesh(drawMesh)
 {
+	m_bitmaps[TerrainType::Empty] = 1;
+
 	m_map = std::make_shared<std::vector<TerrainType>>();
 	m_map->reserve(terrainWidth * terrainHeight);
 
@@ -20,32 +23,12 @@ Terrain::Terrain(size_t terrainWidth, size_t terrainHeight, bool drawMesh)
 
 Terrain::~Terrain()
 {
-	for (auto it = m_bitmaps.cbegin(); it != m_bitmaps.cend(); ++it)
-	{
-		if (*(it->second))
-			(*(it->second))->Release();
-	}
 }
 
-bool Terrain::Init(std::shared_ptr<Graphics> graphics)
+void Terrain::Draw(const Graphics &graphics) const
 {
-	wchar_t *filenameFree = L"tile1.png";
-
-	m_bitmaps[TerrainType::Empty] = new ID2D1Bitmap*;
-
-	if (!ImageLoader::LoadSprite(graphics, filenameFree, m_bitmaps[TerrainType::Empty]))
-	{
-		Logger::Log(L"Sprite loading failed. File: " + std::wstring(filenameFree));
-		return false;
-	}
-
-	return true;
-}
-
-void Terrain::Draw(std::shared_ptr<Graphics> graphics) const
-{
-	int windowWidth = graphics->GetRenderTarget()->GetSize().width;
-	int windowHeight = graphics->GetRenderTarget()->GetSize().height;
+	int windowWidth = graphics.GetRenderTarget()->GetSize().width;
+	int windowHeight = graphics.GetRenderTarget()->GetSize().height;
 
 	int tileWidth = TILE_WIDTH;
 	int tileHeight = TILE_HEIGHT;
@@ -59,11 +42,12 @@ void Terrain::Draw(std::shared_ptr<Graphics> graphics) const
 		for (int j = 0; j < m_terrainHeight; ++j)
 		{
 			TerrainType terrainType = (*m_map)[i * m_terrainHeight + j];
-			bmp = *m_bitmaps.at(terrainType);
+			SpriteId spriteId = m_bitmaps.at(terrainType);
+			bmp = SpriteManager::GetInstance().GetSprite(spriteId);
 
 			x = i * tileWidth;
 			y = j * tileHeight;
-			graphics->GetRenderTarget()->DrawBitmap(
+			graphics.GetRenderTarget()->DrawBitmap(
 				bmp,
 				D2D1::RectF(x, y, x + tileWidth, y + tileHeight),
 				1.0f,
@@ -75,7 +59,7 @@ void Terrain::Draw(std::shared_ptr<Graphics> graphics) const
 	if (m_drawMesh)
 	{
 		ID2D1SolidColorBrush *brush = nullptr;
-		HRESULT res = graphics->GetRenderTarget()->CreateSolidColorBrush(D2D1::ColorF(0, 0, 0, 0.2f), &brush);
+		HRESULT res = graphics.GetRenderTarget()->CreateSolidColorBrush(D2D1::ColorF(0, 0, 0, 0.2f), &brush);
 		if (res != S_OK)
 		{
 			Logger::Log(L"ID2D1SolidColorBrush creation failed.");
@@ -84,7 +68,7 @@ void Terrain::Draw(std::shared_ptr<Graphics> graphics) const
 
 		for (float i = tileWidth; i < windowWidth; i += tileWidth)
 		{
-			graphics->GetRenderTarget()->DrawLine(
+			graphics.GetRenderTarget()->DrawLine(
 				D2D1::Point2F(i, 0),
 				D2D1::Point2F(i, windowHeight),
 				brush);
@@ -92,7 +76,7 @@ void Terrain::Draw(std::shared_ptr<Graphics> graphics) const
 
 		for (float j = tileHeight; j < windowHeight; j += tileHeight)
 		{
-			graphics->GetRenderTarget()->DrawLine(
+			graphics.GetRenderTarget()->DrawLine(
 				D2D1::Point2F(0, j),
 				D2D1::Point2F(windowWidth, j),
 				brush);
